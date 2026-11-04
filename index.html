@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>مشروعك – فضاء صاحب المشروع</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@500;700;800&family=Readex+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Mise en page : une colonne type « carnet de suivi », bandeau pétrole, accents or – arabe (RTL), français et anglais (LTR) */
+:root{--bg:#F6F7FA;--card:#fff;--ink:#0F1424;--mute:#4A5065;--line:#E3E5EC;--main:#0F1424;--accent:#FF5B22;--ok:#1d8a56;--warn:#c27a0e;--bad:#c0392b;
+ --fd:'Noto Kufi Arabic','Readex Pro',Tahoma,sans-serif;--fb:'Readex Pro',Tahoma,sans-serif}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.7 var(--fb)}
+header{background:#0F1424;color:#fff;padding:18px max(16px,env(safe-area-inset-right)) 70px max(16px,env(safe-area-inset-left))}
+.wrap{max-width:760px;margin:0 auto}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;font:700 27px var(--fd)}
+.brand b{display:inline-flex;align-items:center;gap:10px;background:none;color:#fff;padding:0;font-weight:700}
+.brand b:before{content:"";flex:none;width:32px;height:32px;border-radius:10px;background:radial-gradient(circle,#FF5B22 0 7px,#fff 7.6px)}
+.brand small{font:500 16px var(--fb);opacity:.85}
+.langs{display:flex;gap:4px;background:rgba(255,255,255,.12);border-radius:999px;padding:3px}
+.langs button{background:transparent;color:#fff;border-radius:999px;padding:4px 12px;font:700 14px var(--fb)}
+.langs button[aria-pressed=true]{background:#FF5B22;color:#0F1424}
+main{padding:0 max(16px,env(safe-area-inset-right)) 40px max(16px,env(safe-area-inset-left));margin-top:-50px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:18px;box-shadow:0 6px 24px rgba(15,20,36,.08)}
+h2{font:800 22px var(--fd);margin:0 0 14px;color:var(--main)}
+h3{font:800 17px var(--fd);margin:18px 0 4px;color:var(--ink)}
+label{display:block;font-weight:700;margin:10px 0 6px}
+input,select,textarea{width:100%;font:inherit;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:3px solid color-mix(in srgb,var(--accent) 40%,transparent);border-color:var(--accent)}
+button{font:800 17px var(--fd);border:0;border-radius:12px;padding:12px 22px;cursor:pointer;background:var(--main);color:#fff}
+button.gold{background:var(--accent);color:#0F1424}
+button.ghost{background:transparent;color:var(--main);border:1.5px solid var(--line)}
+button.link{background:none;color:var(--main);padding:4px 0;font:700 15px var(--fb);text-decoration:underline}
+button:disabled{opacity:.55;cursor:wait}
+.row{display:flex;gap:12px;flex-wrap:wrap}.row>*{flex:1 1 200px;min-width:0}
+.msg{padding:12px 14px;border-radius:12px;margin-top:12px;font-weight:700}
+.msg.err{background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad)}
+.msg.ok{background:color-mix(in srgb,var(--ok) 14%,transparent);color:var(--ok)}
+.hint{color:var(--mute);font-size:15px;margin:0 0 6px}
+.hello{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.hello h1{font:900 26px/1.3 var(--fd);margin:0}
+.hello .meta,.meta{color:var(--mute);font-size:15px}
+.big{font:900 46px/1 var(--fd);color:var(--accent);font-variant-numeric:tabular-nums}
+.prog{height:12px;border-radius:8px;background:var(--line);overflow:hidden;margin:16px 0 22px}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--main));border-radius:8px}
+[dir=rtl] .prog i{background:linear-gradient(270deg,var(--accent),var(--main))}
+.steps{list-style:none;margin:0;padding:0}
+.steps li{display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:start;position:relative;padding-bottom:16px}
+.steps li:not(:last-child)::after{content:"";position:absolute;inset-inline-start:19px;top:38px;bottom:0;width:2px;background:var(--line)}
+.steps .n{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:800 17px var(--fd);background:var(--bg);border:2px solid var(--line);color:var(--mute)}
+.steps .done .n{background:var(--ok);border-color:var(--ok);color:#fff}
+.steps .cur .n{background:var(--accent);border-color:var(--accent);color:#0F1424;box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 25%,transparent)}
+.steps .t{padding-top:6px;font-weight:700}.steps .cur .t{color:var(--main)}
+.steps .s{font-size:14px;color:var(--mute);font-weight:400}
+.note{background:color-mix(in srgb,var(--accent) 12%,transparent);border-inline-start:4px solid var(--accent);padding:12px 14px;border-radius:10px;margin-top:6px}
+.doc{display:grid;grid-template-columns:1fr auto;gap:10px 14px;align-items:center;padding:14px 0;border-top:1px solid var(--line)}
+.doc .nm{font-weight:700;min-width:0}.doc .f{font-size:14px;color:var(--mute);overflow-wrap:anywhere}
+.doc .rq{grid-column:1/-1;font-size:14px;color:var(--bad)}
+.chip{display:inline-block;padding:3px 12px;border-radius:999px;font:700 14px var(--fb);white-space:nowrap}
+.c-req{background:color-mix(in srgb,var(--mute) 15%,transparent);color:var(--mute)}
+.c-rec{background:color-mix(in srgb,var(--warn) 16%,transparent);color:var(--warn)}
+.c-ok{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}
+.c-bad{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+.up{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+.filebtn{display:inline-block;background:var(--main);color:#fff;border-radius:10px;padding:8px 14px;font:800 15px var(--fd);cursor:pointer;margin:0}
+.filebtn input{display:none}
+.fiche{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px}.fiche .full{grid-column:1/-1}
+.fiche label{font-size:15px;margin:8px 0 4px}.fiche label i{color:var(--bad);font-style:normal}
+.ok-badge{color:var(--ok);font-weight:700}.ko-badge{color:var(--warn);font-weight:700}
+@media (max-width:560px){.fiche{grid-template-columns:1fr}}
+.sep{margin:6px 0 2px;padding:10px 12px;border-radius:10px;background:color-mix(in srgb,var(--main) 8%,transparent);font-size:15px}
+.req{border-top:1px solid var(--line);padding:12px 0}
+.req .h{display:flex;justify-content:space-between;gap:10px;font-size:14px;color:var(--mute);flex-wrap:wrap}
+.req .a{margin-top:8px;padding:10px 12px;border-radius:10px;background:color-mix(in srgb,var(--main) 10%,transparent)}
+.contact{display:grid;gap:10px}
+.tel{font:700 27px var(--fd);color:var(--main);direction:ltr;unicode-bidi:isolate;text-decoration:none;white-space:nowrap}
+.open{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:15px}
+.open i{width:10px;height:10px;border-radius:50%;background:var(--ok)}.open.off i{background:var(--mute)}
+.demo{background:var(--accent);color:#0F1424;text-align:center;font-weight:700;padding:6px 16px;font-size:14px}
+footer{text-align:center;color:var(--mute);font-size:14px;padding:10px 16px 30px}
+.paybox{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:14px 0;padding:16px;border-radius:14px;background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.amt{font:900 38px/1.1 var(--fd);color:var(--main)}
+.amt bdi{white-space:nowrap}
+.etude{margin-top:16px;padding:16px;border-radius:14px;border:2px dashed var(--line);text-align:center}
+.etude.on{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 10%,transparent)}
+.resume{text-align:start;white-space:pre-wrap;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:12px 0}
+.dl,.call,.wa{display:inline-flex;gap:8px;align-items:center;justify-content:center;margin-top:10px;color:#fff;text-decoration:none;border-radius:12px;padding:12px 22px;font:800 18px var(--fd)}
+.dl{background:var(--ok)}.call{background:var(--main)}.wa{background:#1f9d55}
+.call bdi{direction:ltr;white-space:nowrap}
+.tabs{display:flex;gap:6px;margin-bottom:6px}
+.tabs button{flex:1;background:var(--bg);color:var(--mute);border:1.5px solid var(--line);font-size:16px;padding:10px}
+.tabs button[aria-selected=true]{background:var(--main);color:#fff;border-color:var(--main)}
+[hidden]{display:none!important}
+/* simplification 04/11 : intro, prochaine étape, sections repliées, bouton WhatsApp */
+#intro h2{font:800 24px/1.4 var(--fd);margin:0 0 6px}
+.trois{list-style:none;margin:16px 0;padding:0;display:grid;gap:12px;counter-reset:n}
+.trois li{display:flex;gap:12px;align-items:center;font-weight:600;counter-increment:n}
+.trois li::before{content:counter(n);flex:none;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--ink);color:#fff;font:800 16px var(--fd)}
+.simuBtn{display:block;padding:14px;border-radius:12px;border:2px solid var(--accent);color:var(--ink);font:800 17px var(--fd);text-decoration:none;text-align:center;margin-bottom:22px}
+.etnow{font-size:17px;margin-bottom:6px}
+details.toutes{margin-top:12px}details.toutes>summary{cursor:pointer;color:var(--mute);font-weight:700;font-size:15px;margin-bottom:10px}
+.next{border:2px solid var(--accent);background:#FFF6F1}
+.next h2{font-size:24px;margin:2px 0 6px;color:var(--ink)}.next p{margin:0 0 14px}
+.next button{width:100%;font-size:19px;padding:15px}
+details.sec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;font:800 20px var(--fd);color:var(--main)}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary>span:first-child{flex:1}
+details.sec>summary::after{content:"+";font:600 28px/1 var(--fb);color:var(--mute);width:28px;text-align:center}
+details.sec[open]>summary::after{content:"−"}
+details.sec[open]>summary{margin-bottom:12px}
+.fab{position:fixed;bottom:max(16px,env(safe-area-inset-bottom));inset-inline-end:16px;z-index:9;display:flex;gap:8px;align-items:center;background:#1f9d55;color:#fff;text-decoration:none;font:800 17px var(--fd);padding:12px 20px;border-radius:999px;box-shadow:0 6px 20px rgba(15,20,36,.25)}
+body{padding-bottom:84px}
+#prepCard .lvc.off{display:none}
+.doc .fl{grid-column:1/-1;list-style:none;margin:0;padding:0}.doc .fl li{display:grid;grid-template-columns:1fr auto auto;gap:6px 10px;align-items:center;padding:8px 10px;margin-top:6px;border-radius:10px;background:#F6F7FA}
+.doc .fl li.vide{display:block;color:var(--mute);font-size:14px;background:none;padding:2px 0}.doc .opt{font-weight:400;font-size:14px;color:var(--mute)}
+.del{background:none;border:1px solid var(--line);color:var(--bad);border-radius:8px;padding:4px 10px;font:700 14px var(--fb);cursor:pointer}
+@media (max-width:560px){.doc{grid-template-columns:1fr}.up{justify-content:flex-start}.doc .fl li{grid-template-columns:1fr auto}}
+.lv{display:grid;gap:12px;margin-top:10px}.lvc{border:1.5px solid var(--line);border-radius:14px;padding:14px 16px}.lvc.off{opacity:.6;background:#F8F9FB}
+.lvh{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.lvb{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.ph{background:#FFE9DE;border-bottom:1.5px dashed var(--accent);padding:0 3px;border-radius:3px;color:#9A3412}
+.qz-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}.qz-ax{margin-top:12px}.qz-q{font:800 21px var(--fd);margin:6px 0 10px;line-height:1.5}
+button.opt{display:block;width:100%;text-align:start;margin:8px 0;background:#fff;color:var(--ink);border:2px solid var(--line);font:600 17px var(--fb);line-height:1.6;padding:12px 16px}
+button.opt:hover:not(:disabled){border-color:var(--main)}button.opt:disabled{cursor:default;opacity:1}button.opt.ok{border-color:var(--ok);background:#e6f5ec}button.opt.ko{border-color:var(--bad);background:#fdecea}
+.fb{font-weight:800;padding:10px 14px;border-radius:12px;margin-top:10px}.fb-ok{background:#e6f5ec;color:var(--ok)}.fb-ko{background:#fdecea;color:var(--bad)}
+.modele{background:#F6F7FA;border-radius:12px;padding:12px 16px;margin-top:10px;line-height:1.8}.avert{color:var(--bad);margin-top:8px;font-size:15px}
+.rv{border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:8px 0}.rv summary{cursor:pointer;font-weight:700;line-height:1.6}.rv .num{display:inline-block;min-width:28px;text-align:center;background:var(--accent);color:#0F1424;border-radius:7px;font-size:14px;margin-inline-end:6px}
+.rv.pitch{border-color:var(--accent);background:#FFF6F1}.vide{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-weight:700}.vide input{max-width:230px;font:800 20px var(--fd);text-align:center;margin:0}.vide input.ok{border-color:var(--ok);background:#e6f5ec}.vide input.ko{border-color:var(--bad);background:#fdecea}.rv-ax{margin:18px 0 4px;color:var(--main)}
+@media (prefers-reduced-motion:no-preference){.prog i{transition:width .8s ease}}
+</style></head><body>
+<div class="demo" id="demoBar" hidden></div>
+<header><div class="wrap top">
+  <div class="brand"><b>مشروعك</b><small data-t="sous"></small></div>
+  <div class="langs" role="group" aria-label="Langue"><button data-l="ar">العربية</button><button data-l="fr">Français</button><button data-l="en">English</button></div>
+</div></header>
+<main><div class="wrap">
+
+<!-- connexion -->
+<section class="card" id="login">
+  <div id="intro">
+    <h2 data-t="introT"></h2>
+    <p class="hint" data-t="introP"></p>
+    <ol class="trois"><li data-t="i1"></li><li data-t="i2"></li><li data-t="i3"></li></ol>
+    <a href="simulateur.html" class="simuBtn" data-t="simu"></a>
+  </div>
+  <div class="tabs" role="tablist"><button role="tab" id="tabIn" aria-selected="true" data-t="tabIn"></button><button role="tab" id="tabNew" aria-selected="false" data-t="tabNew"></button></div>
+  <form id="fLogin" autocomplete="on">
+    <p class="hint" data-t="hintIn"></p>
+    <label for="tel" data-t="tel"></label><input id="tel" type="tel" dir="ltr" inputmode="tel" autocomplete="tel" placeholder="05XX XX XX XX" required>
+    <label for="mdp" data-t="mdp"></label><input id="mdp" type="password" autocomplete="current-password" required>
+    <div style="margin-top:14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap"><button type="submit" class="gold" id="bLogin" data-t="entrer"></button><button type="button" class="link" id="lnkOubli" data-t="oubli"></button></div>
+  </form>
+  <form id="fNew" hidden autocomplete="on">
+    <p class="hint" data-t="hintNew"></p>
+    <label for="nom2" data-t="nomPre"></label><input id="nom2" type="text" autocomplete="name" required minlength="3" maxlength="120">
+    <label for="tel2" data-t="tel"></label><input id="tel2" type="tel" dir="ltr" inputmode="tel" autocomplete="tel" placeholder="05XX XX XX XX" required>
+    <label for="m1" data-t="mdpNew"></label><input id="m1" type="password" autocomplete="new-password" minlength="6" required>
+    <label class="hint" style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="voirMdp" style="width:auto;margin:0"><span data-t="voir"></span></label>
+    <div style="margin-top:14px"><button type="submit" class="gold" id="bNew" data-t="creer"></button></div>
+  </form>
+  <p class="hint" id="oubliMsg" hidden></p>
+  <div id="loginMsg"></div>
+</section>
+
+<div id="app" hidden>
+  <section class="card">
+    <div class="hello">
+      <div><h1 id="hNom"></h1><div class="meta"><span id="hProjet"></span> · <span data-t="dossier"></span> <b dir="ltr" id="hCode"></b></div></div>
+      <div style="text-align:end"><div class="big" id="pct" dir="ltr">0%</div><div class="meta" data-t="avance"></div></div>
+    </div>
+    <div class="prog"><i id="bar" style="width:0"></i></div>
+    <div class="etnow" id="etapeNow"></div>
+    <div class="note" id="note" hidden></div>
+    <details class="toutes"><summary data-t="voirEtapes"></summary>
+      <ol class="steps" id="steps"></ol>
+      <div class="meta"><span data-t="maj"></span> : <span id="maj" dir="ltr"></span></div>
+    </details>
+  </section>
+
+  <section class="card next" id="next"></section>
+
+  <details class="card sec" id="secFiche"><summary><span data-t="ficheT"></span><span id="ficheEtat"></span></summary>
+    <p class="hint" data-t="ficheHint"></p>
+    <form id="fFiche"><div class="fiche" id="ficheChamps"></div>
+      <div style="margin-top:14px"><button type="submit" class="gold" id="bFiche" data-t="ficheSave"></button></div></form>
+    <div id="ficheMsg"></div>
+  </details>
+
+  <details class="card sec" id="secDocs"><summary><span data-t="docs"></span><span id="docsEtat"></span></summary>
+    <p class="hint" data-t="docsHint"></p>
+    <div id="docs"></div>
+    <div id="docMsg"></div>
+  </details>
+
+  <section class="card" id="prepCard" dir="rtl" lang="ar" hidden></section>
+
+  <details class="card sec" id="payCard"><summary><span data-t="pay"></span><span class="chip" id="payChip"></span></summary>
+    <div class="paybox"><div><div class="meta" data-t="montant"></div><div class="amt" id="amt"></div></div>
+      <p class="meta" style="margin:0;flex:1 1 220px" data-t="payTxt"></p></div>
+    <p id="payInfo" style="margin:0 0 10px"></p>
+    <div id="payUp"></div>
+    <div id="payMsg"></div>
+    <div class="etude" id="etude"></div>
+    <div style="margin-top:16px">
+      <label for="mail" data-t="mailLbl"></label>
+      <form id="fMail" class="row"><div><input id="mail" type="email" dir="ltr" placeholder="exemple@gmail.com"></div><div style="flex:0 0 auto"><button class="ghost" id="bMail" data-t="save"></button></div></form>
+      <div id="mailMsg"></div>
+    </div>
+  </details>
+
+  <details class="card sec" id="secReq"><summary><span data-t="reqT"></span></summary>
+    <form id="fReq">
+      <label for="rType" data-t="reqType"></label>
+      <select id="rType"></select>
+      <label for="rMsg" data-t="reqMsg"></label>
+      <textarea id="rMsg" rows="4" maxlength="2000" required></textarea>
+      <div style="margin-top:12px"><button type="submit" id="bReq" data-t="send"></button></div>
+    </form>
+    <div id="reqMsg"></div>
+    <div id="reqs" style="margin-top:14px"></div>
+  </details>
+
+  <details class="card sec" id="secAide"><summary><span data-t="aide"></span></summary><div class="contact" id="contact"></div></details>
+  <div style="text-align:center"><button class="ghost" id="bOut" data-t="out"></button></div>
+</div>
+</div></main>
+<footer data-t="foot"></footer>
+<a class="fab" id="fab" href="https://wa.me/213556417326" target="_blank" rel="noopener">💬 <span data-t="waFab"></span></a>
+<script src="quiz.js" defer></script>
+
+<script>
+/* ======== À REMPLIR : l'adresse du script Google (voir LISEZ-MOI.txt) ======== */
+const API = 'https://script.google.com/macros/s/AKfycbyCenT8Wx8i7v1i7B5_IuWQaLGV6ByBk69oHLxawYgtTdLawjN2L_9isGoYzWz6EiVb/exec';
+/* ============================================================================ */
+const $ = s => document.querySelector(s);
+const DEMO = !API;
+const DEF = {tel: '0556417326', horaires: {jours: [6, 0, 1, 2, 3, 4], debut: '08:30', fin: '17:00'}};
+
+/* ---------- textes AR / FR / EN ---------- */
+const T = {
+ar: {introT: 'نُحضّر دراسة مشروعك لملف NESDA', introP: 'كل شيء من هاتفك، دون تنقّل. ثمن الدراسة : 5.000 دج.', i1: 'أنشئ حسابك : الاسم والهاتف فقط', i2: 'أرسل بياناتك والفاتورة الشكلية', i3: 'استلم دراستك جاهزة وتدرّب على أسئلة اللجنة',
+  voirEtapes: 'عرض كل المراحل', etNow: 'المرحلة الحالية', nxT: 'الخطوة التالية', manque: 'ناقص : {n}', waFab: 'واتساب',
+  nx: {renv: ['أعد إرسال وثيقة', 'إحدى وثائقك غير واضحة أو ناقصة. افتح الوثائق لترى ملاحظتنا.', 'فتح الوثائق'], fiche: ['أكمل بياناتك', 'نحتاج معلوماتك الشخصية لكتابة الدراسة. لن تأخذ أكثر من 3 دقائق.', 'ملء بياناتي'],
+    proforma: ['أرسل الفاتورة الشكلية', 'اطلبها من مورّد التجهيزات، ثم صوّرها وأرسلها هنا.', 'إرسال الفاتورة'], assurance: ['أرسل عرض التأمين', 'اطلبه من شركة التأمين، ثم صوّره وأرسله هنا.', 'إرسال عرض التأمين'],
+    pay: ['ادفع ثمن الدراسة', '{m} دج. نرسل لك طريقة الدفع عبر واتساب، ثم ترسل صورة الوصل هنا.', 'إرسال الوصل'], verif: ['ننتظر تأكيد الدفع', 'لا شيء عليك الآن. سنؤكد دفعك قريباً.', ''],
+    dl: ['دراستك جاهزة', 'حمّلها الآن واحتفظ بها.', 'تحميل الدراسة'], quiz: ['تدرّب على أسئلة اللجنة', 'نحن نعمل على دراستك. استغلّ الوقت للتحضير.', 'ابدأ التدريب'], wait: ['نحن نعمل على دراستك', 'لا شيء عليك الآن. سنراسلك عند كل جديد.', '']},
+  sous: 'دراسات وملفات NESDA · فضاء صاحب المشروع', suivre: 'تابع دراسة مشروعك', tabIn: 'دخول', tabNew: 'حساب جديد', simu: '🧮 احسب تمويل مشروعك في 30 ثانية', hintIn: 'أدخل رقم هاتفك وكلمة السر التي اخترتها.',
+  hintNew: 'أول مرة هنا؟ أنشئ حسابك في أقل من دقيقة: اسمك، رقم هاتفك، وكلمة سر تختارها.', nomPre: 'الاسم واللقب', voir: 'إظهار كلمة السر', oubliTxt: 'نسيت كلمة السر؟ اتصل بنا على {tel}، نعيد تفعيل حسابك ثم تنشئ كلمة سر جديدة من «حساب جديد» بنفس الرقم.', tel: 'رقم الهاتف', mdp: 'كلمة السر', entrer: 'دخول', oubli: 'نسيت كلمة السر؟',
+  ddn: 'تاريخ الميلاد', mdpNew: 'اختر كلمة سر (6 أحرف على الأقل)', mdpConf: 'أعد كتابة كلمة السر', creer: 'إنشاء حسابي', diff: 'كلمتا السر غير متطابقتين',
+  dossier: 'رقم الملف', avance: 'نسبة التقدم', etapes: 'مراحل الدراسة', maj: 'آخر تحديث', fait: 'تمت', cours: 'جارية الآن', avenir: 'قادمة',
+  steps: ['استلام الملف', 'الدراسة الأولية للتسجيل', 'إعداد الدراسة النهائية', 'المراجعة مع صاحب المشروع', 'الدراسة جاهزة'],
+  ficheT: 'بياناتك', ficheHint: 'املأ بياناتك بنفسك : نستعملها في الدراسة. الحقول التي عليها * إجبارية.', ficheSave: 'حفظ بياناتي', ficheOk: 'تم حفظ بياناتك، شكراً.', complet: '✔ مكتملة', incomplet: 'غير مكتملة',
+  champs: {nom_ar: 'الاسم واللقب (بالعربية)', nom_lat: 'الاسم واللقب (بالحروف اللاتينية)', nin: 'رقم التعريف الوطني NIN (18 رقماً)', sexe: 'الجنس', lieu_naissance: 'مكان الميلاد', adresse: 'العنوان الشخصي', commune: 'البلدية', wilaya_res: 'الولاية', situation: 'الحالة العائلية',
+    diplome: 'المستوى الدراسي / الشهادة', experience: 'الخبرة المهنية (المدة وأين)', activite: 'نشاط المشروع', local_adresse: 'عنوان المحل', local_statut: 'المحل', remarques: 'ملاحظات'},
+  choix: {sexe: ['ذكر', 'أنثى'], situation: ['أعزب / عزباء', 'متزوج(ة)', 'مطلق(ة)', 'أرمل(ة)'], local_statut: ['ملك', 'إيجار', 'وعد بالإيجار', 'لا يوجد بعد']}, choisir: '— اختر —',
+  docs: 'الوثائق المطلوبة', docsHint: 'صورة واضحة أو ملف PDF (5 ميغا كحد أقصى). يمكنك إرسال عدة ملفات.',
+  gPerso: 'وثائقك الشخصية', gFinal: 'وثائق تحضرها بنفسك للدراسة النهائية', gFinalNote: 'مشروعك يُعدّ الدراسة فقط : لا نقدّم الفاتورة الشكلية ولا التأمين. اطلبهما من المورد ومن شركة التأمين ثم أرسلهما هنا.',
+  doc: {cin: 'بطاقة التعريف الوطنية (الوجهين)', residence: 'شهادة الإقامة', diplome: 'الشهادة أو شهادة الخبرة / التكوين', local: 'عقد الإيجار أو وعد بالإيجار / ملكية المحل', photo: 'صورة شمسية',
+    proforma: 'الفواتير الشكلية للتجهيزات (من المورد)', assurance: 'عروض التأمين (من شركة التأمين)', autre: 'وثائق أخرى (بطاقة تقنية، صورة…)'},
+  ajouter: '+ إضافة ملف', suppr: 'حذف', confSuppr: 'حذف هذا الملف؟', supprOk: 'تم حذف الملف.', facult: 'اختياري', aucun: 'لا يوجد ملف بعد',
+  st: {'مطلوب': 'مطلوب', 'تم الاستلام': 'تم الاستلام', 'مقبول': 'مقبول', 'يجب إعادة إرسالها': 'يجب إعادة إرسالها'},
+  envoyer: 'إرسال', renvoyer: 'إعادة الإرسال', envoiEnCours: 'جارٍ الإرسال…', recuOk: 'تم استلام الوثيقة، شكراً.', tropGros: 'الملف كبير جداً (الحد 5 ميغا).',
+  pay: 'الدفع واستلام الدراسة', montant: 'مبلغ الدراسة', da: 'دج', payTxt: 'تُسلَّم الدراسة النهائية (PDF) بعد دفع المبلغ وتأكيده من طرفنا.',
+  payInfo: '📩 نرسل لك معلومات الدفع عبر رسالة SMS أو واتساب. بعد الدفع أرسل صورة الوصل هنا.',
+  pst: {'غير مدفوع': 'غير مدفوع', 'قيد التحقق': 'قيد التحقق', 'مؤكد': 'مؤكد'}, payOk: '✔ تم تأكيد الدفع، شكراً لك.', envRecu: 'إرسال وصل الدفع', renvRecu: 'إعادة إرسال الوصل', enVerif: 'قيد التحقق',
+  recuMsg: 'وصلنا وصل الدفع، سنتحقق منه ونؤكد لك.', pret: '🎉 دراستك جاهزة', resume: '📋 ملخص الدراسة', dl: 'تحميل الدراسة (PDF)',
+  payerOu: 'ادفع مبلغ الدراسة وأرسل الوصل أعلاه لتحميلها مباشرة، أو اتصل بنا :', bientot: '📘 ستظهر الدراسة النهائية هنا عند الانتهاء منها، وسنرسل لك ملخصها عبر واتساب أو البريد الإلكتروني.',
+  appel: '📞 اتصل للحصول على الدراسة', mailLbl: '📧 بريدك الإلكتروني (لتصلك رسالة عند جاهزية الدراسة)', save: 'حفظ', mailOk: 'تم حفظ بريدك الإلكتروني.',
+  reqT: 'طلب تعديل أو استفسار', reqType: 'نوع الطلب', reqMsg: 'طلبك بالتفصيل', send: 'إرسال الطلب', reqOk: 'وصلنا طلبك، سنرد عليك في أقرب وقت.', reqPh: 'مثال : أريد إضافة آلة ثانية في الدراسة، أو تغيير عنوان المحل…',
+  types: {modif: 'طلب تعديل في الدراسة', equip: 'تغيير في التجهيزات', perso: 'تغيير في المعلومات الشخصية', question: 'استفسار'}, prev: 'طلباتك السابقة', rep: 'ردّنا :',
+  rst: {'قيد المعالجة': 'قيد المعالجة', 'تمت المعالجة': 'تمت المعالجة'},
+  aide: 'تحتاج مساعدة؟', heures: 'ساعات الاتصال', ouvert: 'نحن متاحون الآن', ferme: 'نحن خارج ساعات العمل الآن', laisser: 'إذا لم نرد فوراً، اترك رسالة (واتساب أو SMS) وسنعيد الاتصال بك.',
+  waBtn: '💬 اترك رسالة واتساب', out: 'خروج', foot: 'مشروعك – دراسات وملفات NESDA · تبسة',
+  demo: 'وضع العرض التجريبي : الهاتف 0550000000 · كلمة السر 123456 (أو أول دخول بتاريخ الميلاد 1990-05-12)',
+  jours: ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'], hfmt: (a, b, d, f) => `من ${a} إلى ${b}، من ${d} إلى ${f}`},
+fr: {introT: 'Nous préparons l\'étude de votre projet NESDA', introP: 'Tout se fait depuis votre téléphone, sans vous déplacer. Prix de l\'étude : 5 000 DA.', i1: 'Créez votre compte : nom et téléphone suffisent', i2: 'Envoyez vos informations et la facture proforma', i3: 'Recevez votre étude et entraînez-vous aux questions du comité',
+  voirEtapes: 'Voir toutes les étapes', etNow: 'Étape actuelle', nxT: 'Prochaine étape', manque: 'Manque : {n}', waFab: 'WhatsApp',
+  nx: {renv: ['Renvoyez un document', 'Un de vos documents est illisible ou incomplet. Ouvrez les documents pour lire notre remarque.', 'Ouvrir les documents'], fiche: ['Complétez vos informations', 'Nous en avons besoin pour rédiger l\'étude. Comptez 3 minutes.', 'Remplir mes informations'],
+    proforma: ['Envoyez la facture proforma', 'Demandez-la à votre fournisseur, puis prenez-la en photo et envoyez-la ici.', 'Envoyer la facture'], assurance: ['Envoyez le devis d\'assurance', 'Demandez-le à votre assureur, puis prenez-le en photo et envoyez-le ici.', 'Envoyer le devis'],
+    pay: ['Payez l\'étude', '{m} DA. Nous vous envoyons le mode de paiement par WhatsApp, puis vous envoyez la photo du reçu ici.', 'Envoyer le reçu'], verif: ['Paiement en vérification', 'Rien à faire pour l\'instant. Nous confirmons votre paiement très vite.', ''],
+    dl: ['Votre étude est prête', 'Téléchargez-la et gardez-la.', 'Télécharger l\'étude'], quiz: ['Entraînez-vous pour le comité', 'Nous travaillons sur votre étude. Profitez-en pour vous préparer.', 'Commencer l\'entraînement'], wait: ['Nous travaillons sur votre étude', 'Rien à faire pour l\'instant. Nous vous écrivons à chaque nouveauté.', '']},
+  sous: 'Études NESDA · espace du porteur de projet', suivre: 'Suivez l\'étude de votre projet', tabIn: 'Connexion', tabNew: 'Nouveau compte', simu: '🧮 Calculez votre financement en 30 secondes', hintIn: 'Entrez votre numéro de téléphone et le mot de passe que vous avez choisi.',
+  hintNew: 'Première visite ? Créez votre compte en une minute : votre nom, votre téléphone et un mot de passe de votre choix.', nomPre: 'Nom et prénom', voir: 'Afficher le mot de passe', oubliTxt: 'Mot de passe oublié ? Appelez-nous au {tel} : nous réactivons votre compte, puis vous choisissez un nouveau mot de passe dans « Nouveau compte » avec le même numéro.', tel: 'Numéro de téléphone', mdp: 'Mot de passe', entrer: 'Se connecter', oubli: 'Mot de passe oublié ?',
+  ddn: 'Date de naissance', mdpNew: 'Choisissez un mot de passe (6 caractères minimum)', mdpConf: 'Confirmez le mot de passe', creer: 'Créer mon compte', diff: 'Les deux mots de passe ne sont pas identiques',
+  dossier: 'Dossier', avance: 'avancement', etapes: 'Étapes de l\'étude', maj: 'Dernière mise à jour', fait: 'Terminée', cours: 'En cours', avenir: 'À venir',
+  steps: ['Réception du dossier', 'Étude préliminaire d\'inscription', 'Préparation de l\'étude finale', 'Révision avec vous', 'Étude prête'],
+  ficheT: 'Vos coordonnées', ficheHint: 'Remplissez vous-même vos informations : elles servent à l\'étude. Les champs marqués * sont obligatoires.', ficheSave: 'Enregistrer mes informations', ficheOk: 'Informations enregistrées, merci.', complet: '✔ Complète', incomplet: 'Incomplète',
+  champs: {nom_ar: 'Nom et prénom (en arabe)', nom_lat: 'Nom et prénom (lettres latines)', nin: 'NIN – numéro d\'identification nationale (18 chiffres)', sexe: 'Sexe', lieu_naissance: 'Lieu de naissance', adresse: 'Adresse personnelle', commune: 'Commune', wilaya_res: 'Wilaya', situation: 'Situation familiale',
+    diplome: 'Niveau d\'études / diplôme', experience: 'Expérience professionnelle (durée et où)', activite: 'Activité du projet', local_adresse: 'Adresse du local', local_statut: 'Le local', remarques: 'Remarques'},
+  choix: {sexe: ['Masculin', 'Féminin'], situation: ['Célibataire', 'Marié(e)', 'Divorcé(e)', 'Veuf / veuve'], local_statut: ['Propriété', 'Location', 'Promesse de bail', 'Pas encore de local']}, choisir: '— choisir —',
+  docs: 'Documents demandés', docsHint: 'Photo nette ou PDF (5 Mo max). Plusieurs fichiers possibles.',
+  gPerso: 'Vos documents personnels', gFinal: 'Documents à fournir vous-même pour l\'étude finale', gFinalNote: 'مشروعك réalise uniquement l\'étude : nous ne fournissons ni la facture proforma ni l\'assurance. Demandez-les à votre fournisseur et à votre assureur, puis envoyez-les ici.',
+  doc: {cin: 'Carte d\'identité nationale (recto-verso)', residence: 'Certificat de résidence', diplome: 'Diplôme ou attestation d\'expérience / formation', local: 'Bail, promesse de bail ou titre de propriété du local', photo: 'Photo d\'identité',
+    proforma: 'Factures proforma des équipements (de vos fournisseurs)', assurance: 'Devis d\'assurance (de votre assureur)', autre: 'Autres documents (fiche technique, photo…)'},
+  ajouter: '+ Ajouter un fichier', suppr: 'Supprimer', confSuppr: 'Supprimer ce fichier ?', supprOk: 'Fichier supprimé.', facult: 'Facultatif', aucun: 'Aucun fichier pour l\'instant',
+  st: {'مطلوب': 'Requis', 'تم الاستلام': 'Reçu', 'مقبول': 'Accepté', 'يجب إعادة إرسالها': 'À renvoyer'},
+  envoyer: 'Envoyer', renvoyer: 'Renvoyer', envoiEnCours: 'Envoi en cours…', recuOk: 'Document reçu, merci.', tropGros: 'Fichier trop lourd (5 Mo max).',
+  pay: 'Paiement et réception de l\'étude', montant: 'Prix de l\'étude', da: 'DA', payTxt: 'L\'étude finale (PDF) vous est remise après paiement et confirmation de notre part.',
+  payInfo: '📩 Les coordonnées de paiement vous sont envoyées par SMS ou WhatsApp. Après le paiement, envoyez ici la photo du reçu.',
+  pst: {'غير مدفوع': 'Non payé', 'قيد التحقق': 'En vérification', 'مؤكد': 'Confirmé'}, payOk: '✔ Paiement confirmé, merci.', envRecu: 'Envoyer le reçu', renvRecu: 'Renvoyer le reçu', enVerif: 'en vérification',
+  recuMsg: 'Reçu bien arrivé, nous le vérifions et vous confirmons.', pret: '🎉 Votre étude est prête', resume: '📋 Résumé de l\'étude', dl: 'Télécharger l\'étude (PDF)',
+  payerOu: 'Payez l\'étude et envoyez le reçu ci-dessus pour la télécharger, ou appelez-nous :', bientot: '📘 L\'étude finale apparaîtra ici dès qu\'elle sera prête ; nous vous enverrons son résumé par WhatsApp ou email.',
+  appel: '📞 Appeler pour obtenir l\'étude', mailLbl: '📧 Votre email (pour être prévenu quand l\'étude est prête)', save: 'Enregistrer', mailOk: 'Email enregistré.',
+  reqT: 'Demande de modification ou question', reqType: 'Type de demande', reqMsg: 'Votre demande en détail', send: 'Envoyer la demande', reqOk: 'Demande reçue, nous vous répondons au plus vite.', reqPh: 'Ex. : ajouter une deuxième machine dans l\'étude, changer l\'adresse du local…',
+  types: {modif: 'Modification de l\'étude', equip: 'Changement d\'équipements', perso: 'Changement d\'informations personnelles', question: 'Question'}, prev: 'Vos demandes', rep: 'Notre réponse :',
+  rst: {'قيد المعالجة': 'En cours', 'تمت المعالجة': 'Traitée'},
+  aide: 'Besoin d\'aide ?', heures: 'Heures d\'appel', ouvert: 'Nous sommes disponibles', ferme: 'Nous sommes hors des heures de travail', laisser: 'Si nous ne répondons pas tout de suite, laissez un message (WhatsApp ou SMS), nous vous rappellerons.',
+  waBtn: '💬 Laisser un message WhatsApp', out: 'Se déconnecter', foot: 'مشروعك – Études NESDA · Tébessa',
+  demo: 'Mode démonstration : téléphone 0550000000 · mot de passe 123456 (ou première connexion avec la date de naissance 12/05/1990)',
+  jours: ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'], hfmt: (a, b, d, f) => `Du ${a} au ${b}, de ${d.replace(':', 'h')} à ${f.replace(':', 'h')}`},
+en: {introT: 'We prepare your project study for NESDA', introP: 'Everything from your phone, no travel needed. Study price: 5,000 DA.', i1: 'Create your account: just your name and phone', i2: 'Send your details and the pro-forma invoice', i3: 'Get your finished study and practise the committee questions',
+  voirEtapes: 'Show all steps', etNow: 'Current step', nxT: 'Next step', manque: 'Missing: {n}', waFab: 'WhatsApp',
+  nx: {renv: ['Resend a document', 'One of your documents is unclear or incomplete. Open the documents to read our note.', 'Open documents'], fiche: ['Complete your details', 'We need them to write the study. It takes about 3 minutes.', 'Fill in my details'],
+    proforma: ['Send the pro-forma invoice', 'Ask your equipment supplier for it, then photograph it and send it here.', 'Send the invoice'], assurance: ['Send the insurance quote', 'Ask your insurer for it, then photograph it and send it here.', 'Send the quote'],
+    pay: ['Pay for the study', '{m} DA. We send you the payment details by WhatsApp, then you send a photo of the receipt here.', 'Send the receipt'], verif: ['Payment being verified', 'Nothing to do for now. We will confirm your payment soon.', ''],
+    dl: ['Your study is ready', 'Download it and keep it.', 'Download the study'], quiz: ['Practise for the committee', 'We are working on your study. Use the time to prepare.', 'Start practising'], wait: ['We are working on your study', 'Nothing to do for now. We will message you about any update.', '']},
+  sous: 'NESDA studies · project owner space', suivre: 'Follow your project study', tabIn: 'Sign in', tabNew: 'New account', simu: '🧮 Estimate your financing in 30 seconds', hintIn: 'Enter your phone number and the password you chose.',
+  hintNew: 'First time here? Create your account in a minute: your name, your phone number and a password of your choice.', nomPre: 'Full name', voir: 'Show password', oubliTxt: 'Forgot your password? Call us at {tel}: we reactivate your account, then you choose a new password under “New account” with the same number.', tel: 'Phone number', mdp: 'Password', entrer: 'Sign in', oubli: 'Forgot your password?',
+  ddn: 'Date of birth', mdpNew: 'Choose a password (at least 6 characters)', mdpConf: 'Confirm password', creer: 'Create my account', diff: 'The two passwords do not match',
+  dossier: 'File', avance: 'progress', etapes: 'Study steps', maj: 'Last update', fait: 'Done', cours: 'In progress', avenir: 'Upcoming',
+  steps: ['File received', 'Preliminary registration study', 'Final study in progress', 'Review with you', 'Study ready'],
+  ficheT: 'Your details', ficheHint: 'Fill in your details yourself: they are used for the study. Fields marked * are required.', ficheSave: 'Save my details', ficheOk: 'Details saved, thank you.', complet: '✔ Complete', incomplet: 'Incomplete',
+  champs: {nom_ar: 'Full name (in Arabic)', nom_lat: 'Full name (Latin letters)', nin: 'NIN – national identification number (18 digits)', sexe: 'Sex', lieu_naissance: 'Place of birth', adresse: 'Home address', commune: 'Municipality', wilaya_res: 'Wilaya (province)', situation: 'Marital status',
+    diplome: 'Education / diploma', experience: 'Work experience (how long and where)', activite: 'Project activity', local_adresse: 'Premises address', local_statut: 'The premises', remarques: 'Remarks'},
+  choix: {sexe: ['Male', 'Female'], situation: ['Single', 'Married', 'Divorced', 'Widowed'], local_statut: ['Owned', 'Rented', 'Lease promise', 'No premises yet']}, choisir: '— choose —',
+  docs: 'Required documents', docsHint: 'Clear photo or PDF (5 MB max). Several files allowed.',
+  gPerso: 'Your personal documents', gFinal: 'Documents you provide yourself for the final study', gFinalNote: 'مشروعك only prepares the study: we do not provide the pro-forma invoice or the insurance. Ask your supplier and your insurer for them, then send them here.',
+  doc: {cin: 'National ID card (both sides)', residence: 'Residence certificate', diplome: 'Diploma or proof of experience / training', local: 'Lease, lease promise or property deed of the premises', photo: 'ID photo',
+    proforma: 'Pro-forma invoices for the equipment (from your suppliers)', assurance: 'Insurance quotes (from your insurer)', autre: 'Other documents (data sheet, photo…)'},
+  ajouter: '+ Add a file', suppr: 'Delete', confSuppr: 'Delete this file?', supprOk: 'File deleted.', facult: 'Optional', aucun: 'No file yet',
+  st: {'مطلوب': 'Required', 'تم الاستلام': 'Received', 'مقبول': 'Accepted', 'يجب إعادة إرسالها': 'Please resend'},
+  envoyer: 'Send', renvoyer: 'Resend', envoiEnCours: 'Sending…', recuOk: 'Document received, thank you.', tropGros: 'File too large (5 MB max).',
+  pay: 'Payment and study delivery', montant: 'Study price', da: 'DA', payTxt: 'The final study (PDF) is delivered once payment is made and confirmed by us.',
+  payInfo: '📩 Payment details are sent to you by SMS or WhatsApp. After paying, send a photo of the receipt here.',
+  pst: {'غير مدفوع': 'Unpaid', 'قيد التحقق': 'Being verified', 'مؤكد': 'Confirmed'}, payOk: '✔ Payment confirmed, thank you.', envRecu: 'Send the receipt', renvRecu: 'Resend the receipt', enVerif: 'being verified',
+  recuMsg: 'Receipt received, we will check it and confirm.', pret: '🎉 Your study is ready', resume: '📋 Study summary', dl: 'Download the study (PDF)',
+  payerOu: 'Pay for the study and send the receipt above to download it, or call us:', bientot: '📘 The final study will appear here once it is ready; we will send you its summary by WhatsApp or email.',
+  appel: '📞 Call to get the study', mailLbl: '📧 Your email (to be notified when the study is ready)', save: 'Save', mailOk: 'Email saved.',
+  reqT: 'Change request or question', reqType: 'Request type', reqMsg: 'Your request in detail', send: 'Send request', reqOk: 'Request received, we will answer as soon as possible.', reqPh: 'E.g. add a second machine to the study, change the premises address…',
+  types: {modif: 'Change to the study', equip: 'Change of equipment', perso: 'Change of personal details', question: 'Question'}, prev: 'Your requests', rep: 'Our answer:',
+  rst: {'قيد المعالجة': 'In progress', 'تمت المعالجة': 'Done'},
+  aide: 'Need help?', heures: 'Call hours', ouvert: 'We are available now', ferme: 'We are outside working hours', laisser: 'If we don\'t answer right away, leave a message (WhatsApp or SMS) and we will call you back.',
+  waBtn: '💬 Leave a WhatsApp message', out: 'Sign out', foot: 'مشروعك – NESDA studies · Tébessa',
+  demo: 'Demo mode: phone 0550000000 · password 123456 (or first sign-in with date of birth 12/05/1990)',
+  jours: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], hfmt: (a, b, d, f) => `${a} to ${b}, ${d} – ${f}`},
+};
+let L = 'ar', S = null, V = null;   // langue, jeton de session, dernière vue
+const t = k => T[L][k];
+
+/* ---------- nombres : en arabe un point tous les 3 chiffres (4.200.000) ---------- */
+const AR = /[؀-ۿ]/;
+const nombre = (n, l) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, (l || L) === 'en' ? ',' : (l || L) === 'fr' ? ' ' : '.');
+const chiffres = txt => { const l = AR.test(txt || '') ? 'ar' : L;
+  return String(txt || '').replace(/\d{1,3}(?:[   .,]\d{3})+(?!\d)|\d{5,}(?![\d.,]\d)/g, m => /^0\d{8,9}$/.test(m) ? m : nombre(m.replace(/\D/g, ''), l)); };
+const telAff = n => { const g = [n.slice(0, 4), n.slice(4, 6), n.slice(6, 8), n.slice(8)]; return L === 'ar' ? g.join('.') : g.join(' '); };
+
+/* ---------- démo (quand API est vide) ---------- */
+const DD = {acct: {tel: '0550000000', ddn: '1990-05-12', mdp: '123456'},
+  v: {dossier: {code: 'M26-001', nom: 'محمد بن علي', projet: 'ورشة نجارة الألمنيوم', etape: 3, note: 'استلمنا الفاتورة الشكلية. أكمل بياناتك وأعد إرسال عرض التأمين.', maj: '28/10/2026 16:40', email: '', lang: 'ar'},
+    nsteps: 5, contact: DEF,
+    docs: [{key: 'proforma', statut: 'مقبول', fichiers: [{id: 'd1', fichier: 'proforma_fournisseur.pdf', statut: 'مقبول', remarque: '', date: '27/10/2026'}]},
+      {key: 'assurance', statut: 'يجب إعادة إرسالها', fichiers: [{id: 'd2', fichier: 'assurance.jpg', statut: 'يجب إعادة إرسالها', remarque: 'الصورة غير واضحة، أعد تصويرها في ضوء جيد', date: '27/10/2026'}]},
+      {key: 'autre', optionnel: true, statut: '', fichiers: []}],
+    fiche: {complete: false, valeurs: {nom_ar: 'محمد بن علي', nom_lat: 'BENALI Mohamed', nin: '', sexe: 'ذكر', lieu_naissance: 'تبسة', adresse: 'حي 500 مسكن، عمارة 12', commune: 'تبسة', wilaya_res: 'تبسة', situation: 'متزوج(ة)', diplome: 'شهادة تكوين مهني في النجارة', experience: '', activite: 'نجارة الألمنيوم والزجاج', local_adresse: '', local_statut: 'إيجار', remarques: ''}},
+    paiement: {montant: 5000, statut: 'غير مدفوع', recu: ''},
+    etude: {prete: true, nom: 'etude.pdf', url: '', resume: 'التكلفة الإجمالية للمشروع : 4 200 000 دج\nقرض NESDA : 2940000 دج (70%) · المساهمة الشخصية : 5%\nمناصب الشغل : 3 · مدة الاسترجاع : 4 سنوات'},
+    demandes: [{date: '26/10/2026 10:12', type: 'equip', message: 'أريد إضافة آلة قص ثانية في الدراسة.', statut: 'تمت المعالجة', reponse: 'تمت إضافتها في الدراسة.'}]}};
+function demo(a, q) {
+  const v = DD.v, ac = DD.acct, tn = s => String(s || '').replace(/\D/g, '');
+  const E = {ar: ['رقم الهاتف أو كلمة السر غير صحيحة', 'رقم الهاتف أو تاريخ الميلاد غير صحيح'], fr: ['Téléphone ou mot de passe incorrect', 'Téléphone ou date de naissance incorrect'], en: ['Wrong phone number or password', 'Wrong phone number or date of birth']}[L];
+  if (a === 'login' && !(tn(q.tel) === ac.tel && q.mdp === ac.mdp)) return Promise.reject(new Error(E[0]));
+  if (a === 'creerMdp') { if (!(tn(q.tel) === ac.tel && q.ddn === ac.ddn)) return Promise.reject(new Error(E[1])); ac.mdp = q.mdp; }
+  if (a === 'inscription') { ac.tel = tn(q.tel); ac.mdp = q.mdp; v.dossier.nom = q.nom; }
+  if (a === 'upload') { const x = v.docs.find(y => y.key === q.doc); x.fichiers.push({id: 'd' + Date.now(), fichier: q.name, statut: 'تم الاستلام', remarque: '', date: '30/10/2026'}); if (x.statut !== 'يجب إعادة إرسالها') x.statut = 'تم الاستلام'; }
+  if (a === 'supprimerDoc') v.docs.forEach(x => { x.fichiers = x.fichiers.filter(f => f.id !== q.id); });
+  if (a === 'recu') Object.assign(v.paiement, {statut: 'قيد التحقق', recu: q.name});
+  if (a === 'request') v.demandes.unshift({date: '29/10/2026', type: q.type, message: q.message, statut: 'قيد المعالجة', reponse: ''});
+  if (a === 'email') v.dossier.email = q.email;
+  if (a === 'prep') {}
+  if (a === 'quiz') { v.quiz = v.quiz || {}; v.quiz[q.niveau] = Math.max(v.quiz[q.niveau] || 0, q.score); }
+  if (a === 'fiche' && q.fiche.nin && q.fiche.nin.replace(/\D/g, '').length !== 18) return Promise.reject(new Error({ar: 'رقم التعريف الوطني (NIN) يتكون من 18 رقماً', fr: 'Le NIN doit comporter 18 chiffres', en: 'The NIN must have 18 digits'}[L]));
+  if (a === 'fiche') { Object.assign(v.fiche.valeurs, q.fiche); v.fiche.complete = OBLIG.every(k => String(v.fiche.valeurs[k] || '').trim()); }
+  return new Promise(ok => setTimeout(() => ok({token: 'demo', data: JSON.parse(JSON.stringify(v))}), 300));
+}
+async function call(action, data = {}) {
+  const q = Object.assign({action, lang: L, token: S}, data);
+  if (DEMO) return demo(action, q);
+  const r = await fetch(API, {method: 'POST', headers: {'Content-Type': 'text/plain;charset=utf-8'}, body: JSON.stringify(q)});
+  const j = await r.json(); if (!j.ok) { if (S && /session|الجلسة/i.test(j.error || '')) sortir(); throw new Error(j.error || '…'); } return j;
+}
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const say = (el, m, ok) => { $(el).innerHTML = m ? `<div class="msg ${ok ? 'ok' : 'err'}">${esc(m)}</div>` : ''; };
+const store = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} };
+const load = k => { try { return localStorage.getItem(k); } catch { return null; } };
+
+/* ---------- langue ---------- */
+function setLang(l, sync) {
+  L = T[l] ? l : 'ar'; store('mchLang', L);
+  document.documentElement.lang = L; document.documentElement.dir = L === 'ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-t]').forEach(e => e.textContent = t(e.dataset.t));
+  document.querySelectorAll('.langs button').forEach(b => b.setAttribute('aria-pressed', b.dataset.l === L));
+  $('#rType').innerHTML = Object.entries(t('types')).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
+  $('#rMsg').placeholder = t('reqPh'); $('#demoBar').textContent = t('demo');
+  document.title = L === 'ar' ? 'مشروعك – فضاء صاحب المشروع' : L === 'fr' ? 'مشروعك – Espace porteur de projet' : 'مشروعك – Project owner space';
+  if (V) render(V);
+  if (sync && S) call('lang').catch(() => {});
+}
+document.querySelector('.langs').addEventListener('click', e => { const b = e.target.closest('button[data-l]'); if (b) setLang(b.dataset.l, true); });
+
+/* ---------- affichage ---------- */
+const CHIP = {'مطلوب': 'c-req', 'تم الاستلام': 'c-rec', 'مقبول': 'c-ok', 'يجب إعادة إرسالها': 'c-bad'};
+function heureAlger() { const p = new Intl.DateTimeFormat('en-GB', {timeZone: 'Africa/Algiers', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false}).formatToParts(new Date());
+  const g = k => (p.find(x => x.type === k) || {}).value; return {j: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(g('weekday')), hm: g('hour').replace('24', '00') + ':' + g('minute')}; }
+function ouvert(h) { const n = heureAlger(); return h.jours.includes(n.j) && n.hm >= h.debut && n.hm < h.fin; }
+function contact(c) {
+  const h = c.horaires, j = t('jours'), on = ouvert(h), wa = 'https://wa.me/213' + c.tel.replace(/^0/, '');
+  return {on, wa, html: `<div><span class="open ${on ? '' : 'off'}"><i></i>${on ? t('ouvert') : t('ferme')}</span></div>
+    <a class="tel" href="tel:${c.tel}">${telAff(c.tel)}</a>
+    <div><b>${t('heures')} :</b> ${esc(t('hfmt')(j[h.jours[0]], j[h.jours[h.jours.length - 1]], h.debut, h.fin))}</div>
+    <div class="meta">${t('laisser')}</div><div><a class="wa" href="${wa}" target="_blank" rel="noopener">${t('waBtn')}</a></div>`};
+}
+function render(v) {
+  V = v; const d = v.dossier, n = v.nsteps || 5, e = Math.min(n, Math.max(1, d.etape));
+  const pct = Math.round(e === n ? 100 : (e - 1) / (n - 1) * 100);
+  $('#hNom').textContent = d.nom; $('#hProjet').textContent = d.projet; $('#hCode').textContent = d.code;
+  $('#pct').textContent = pct + '%'; $('#bar').style.width = pct + '%'; $('#maj').textContent = d.maj || '—';
+  $('#steps').innerHTML = t('steps').slice(0, n).map((s, i) => { const k = i + 1 < e || e === n ? 'done' : i + 1 === e ? 'cur' : '';
+    return `<li class="${k}"><span class="n">${k === 'done' ? '✓' : i + 1}</span><div class="t">${esc(s)}<div class="s">${k === 'done' ? t('fait') : k === 'cur' ? t('cours') : t('avenir')}</div></div></li>`; }).join('');
+  $('#note').hidden = !d.note; $('#note').textContent = d.note ? '📌 ' + chiffres(d.note) : '';
+  const fRow = f => `<li class="fi"><div class="f">📎 <bdi>${esc(f.fichier)}</bdi> · <span dir="ltr">${esc(f.date)}</span></div>
+    <span class="chip ${CHIP[f.statut] || 'c-rec'}">${esc(t('st')[f.statut] || f.statut)}</span>
+    ${f.statut === 'مقبول' ? '<span></span>' : `<button type="button" class="del" data-id="${esc(f.id)}">${t('suppr')}</button>`}
+    ${f.remarque ? `<div class="rq">⚠ ${esc(f.remarque)}</div>` : ''}</li>`;
+  const docRow = x => { const fs = x.fichiers || []; return `<div class="doc"><div><div class="nm">${esc(t('doc')[x.key] || x.key)}${x.optionnel ? ` <span class="opt">(${t('facult')})</span>` : ''}</div></div>
+    <div class="up">${x.statut ? `<span class="chip ${CHIP[x.statut] || 'c-req'}">${esc(t('st')[x.statut] || x.statut)}</span>` : ''}
+    <label class="filebtn">${t('ajouter')}<input type="file" multiple accept="image/*,application/pdf" data-doc="${x.key}"></label></div>
+    <ul class="fl">${fs.length ? fs.map(fRow).join('') : `<li class="vide">${t('aucun')}</li>`}</ul></div>`; };
+  $('#docs').innerHTML = `<div class="sep">ℹ️ ${t('gFinalNote')}</div>` + v.docs.map(docRow).join('');
+  renderFiche(v.fiche || {valeurs: {}, complete: false});
+  window._lastV = v; if (window.renderPrep) window.renderPrep(v);
+  const pa = v.paiement || {statut: 'غير مدفوع'}, et = v.etude || {}, c = contact(v.contact || DEF);
+  $('#amt').innerHTML = `<bdi dir="ltr">${nombre(pa.montant || 5000)}</bdi> ${t('da')}`;
+  $('#payChip').textContent = t('pst')[pa.statut] || pa.statut; $('#payChip').className = 'chip ' + (pa.statut === 'مؤكد' ? 'c-ok' : pa.statut === 'قيد التحقق' ? 'c-rec' : 'c-req');
+  $('#payInfo').textContent = pa.statut === 'مؤكد' ? '' : t('payInfo');
+  $('#payUp').innerHTML = pa.statut === 'مؤكد' ? `<div class="msg ok">${t('payOk')}</div>`
+    : `<div class="up" style="justify-content:flex-start">${pa.recu ? `<span class="f">📎 ${esc(pa.recu)} – ${t('enVerif')}</span>` : ''}<label class="filebtn">${pa.recu ? t('renvRecu') : t('envRecu')}<input type="file" id="recu" accept="image/*,application/pdf"></label></div>`;
+  const res = et.resume ? `<div class="resume" dir="auto"><b>${t('resume')}</b>\n${esc(chiffres(et.resume))}</div>` : '';
+  const joindre = c.on ? `<a class="call" href="tel:${(v.contact || DEF).tel}">${t('appel')} <bdi>${telAff((v.contact || DEF).tel)}</bdi></a>`
+    : `<div class="meta">${t('ferme')} – ${t('laisser')}</div><a class="wa" href="${c.wa}" target="_blank" rel="noopener">${t('waBtn')}</a>`;
+  $('#etude').className = 'etude' + (et.prete ? ' on' : '');
+  $('#etude').innerHTML = et.url ? `<b>${t('pret')}</b>${res}<a class="dl" href="${esc(et.url)}" target="_blank" rel="noopener">${t('dl')}</a>`
+    : et.prete ? `<b>${t('pret')}</b>${res}<div class="meta">${t('payerOu')}</div>${joindre}`
+    : `<div class="meta">${t('bientot')}</div>`;
+  if (document.activeElement !== $('#mail')) $('#mail').value = d.email || '';
+  $('#reqs').innerHTML = v.demandes.length ? `<h3>${t('prev')}</h3>` + v.demandes.map(r => `<div class="req"><div class="h"><span>${esc(t('types')[r.type] || r.type)} · <span dir="ltr">${esc(r.date)}</span></span><span class="chip ${r.statut === 'تمت المعالجة' ? 'c-ok' : 'c-rec'}">${esc(t('rst')[r.statut] || r.statut)}</span></div>
+    <div dir="auto">${esc(r.message)}</div>${r.reponse ? `<div class="a" dir="auto"><b>${t('rep')}</b> ${esc(r.reponse)}</div>` : ''}</div>`).join('') : '';
+  $('#contact').innerHTML = c.html; $('#fab').href = c.wa;
+  $('#etapeNow').innerHTML = `<b>${t('etNow')} :</b> ${esc(t('steps')[e - 1])} <span class="meta">(<bdi dir="ltr">${e}/${n}</bdi>)</span>`;
+  const fichiers = x => x.fichiers || [], aRenv = v.docs.some(x => fichiers(x).some(f => f.statut === 'يجب إعادة إرسالها'));
+  const manque = v.docs.filter(x => !x.optionnel && !fichiers(x).length).length;
+  $('#docsEtat').innerHTML = aRenv ? `<span class="chip c-bad">${t('st')['يجب إعادة إرسالها']}</span>` : manque ? `<span class="chip c-req">${t('manque').replace('{n}', manque)}</span>` : '<span class="chip c-ok">✔</span>';
+  const pf = v.docs.find(x => x.key === 'proforma');
+  $('#prepCard').hidden = !((pf && fichiers(pf).length) || pa.statut === 'مؤكد');   // le quiz n'apparaît qu'une fois le niveau 1 ouvert
+  suivant(v, aRenv);
+}
+
+/* ---------- une seule « prochaine étape » mise en avant ---------- */
+let PREM = true;
+function suivant(v, aRenv) {
+  const a = k => { const x = v.docs.find(y => y.key === k); return !x || (x.fichiers || []).length; };
+  const pa = v.paiement || {}, et = v.etude || {};
+  const k = et.url ? 'dl' : aRenv ? 'renv' : !(v.fiche || {}).complete ? 'fiche' : !a('proforma') ? 'proforma' : !a('assurance') ? 'assurance'
+    : pa.statut === 'قيد التحقق' ? 'verif' : pa.statut !== 'مؤكد' ? 'pay' : !$('#prepCard').hidden ? 'quiz' : 'wait';
+  const cible = {dl: 'payCard', renv: 'secDocs', fiche: 'secFiche', proforma: 'secDocs', assurance: 'secDocs', pay: 'payCard', quiz: 'prepCard'}[k];
+  const [ti, tx, bt] = t('nx')[k];
+  $('#next').innerHTML = `<div class="meta">${t('nxT')}</div><h2>${esc(ti)}</h2><p>${esc(tx.replace('{m}', nombre(pa.montant || 5000)))}</p>${bt && cible ? `<button class="gold" data-go="${cible}">${esc(bt)}</button>` : ''}`;
+  if (PREM) { PREM = false; document.querySelectorAll('details.sec').forEach(d => { d.open = d.id === cible; }); }
+}
+$('#next').addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (!b) return;
+  const s = document.getElementById(b.dataset.go); if (s.tagName === 'DETAILS') s.open = true; s.scrollIntoView({behavior: 'smooth', block: 'start'}); });
+
+const OBLIG = ['nom_ar', 'nom_lat', 'nin', 'sexe', 'lieu_naissance', 'adresse', 'commune', 'wilaya_res', 'diplome', 'experience', 'activite', 'local_adresse', 'local_statut'];
+const LARGE = ['adresse', 'experience', 'activite', 'local_adresse', 'remarques'];
+function renderFiche(f) {
+  const val = f.valeurs || {}, ch = t('champs'), cx = t('choix');
+  $('#ficheEtat').innerHTML = f.complete ? `<span class="ok-badge">${t('complet')}</span>` : `<span class="ko-badge">${t('incomplet')}</span>`;
+  if ($('#secFiche').contains(document.activeElement) && $('#ficheChamps').children.length) return;   // ne pas effacer pendant la saisie
+  $('#ficheChamps').innerHTML = Object.keys(ch).map(k => { const o = OBLIG.includes(k), id = 'f_' + k, v = esc(val[k] || '');
+    const champ = cx[k] ? `<select id="${id}" name="${k}" ${o ? 'aria-required="true"' : ''}><option value="">${t('choisir')}</option>${cx[k].map((c, i) => { const ref = T.ar.choix[k][i]; return `<option value="${esc(ref)}" ${ref === val[k] ? 'selected' : ''}>${esc(c)}</option>`; }).join('')}${val[k] && !T.ar.choix[k].includes(val[k]) ? `<option selected>${v}</option>` : ''}</select>`
+      : LARGE.includes(k) && k !== 'adresse' && k !== 'local_adresse' ? `<textarea id="${id}" name="${k}" rows="2" dir="auto" ${o ? 'aria-required="true"' : ''}>${v}</textarea>`
+      : `<input id="${id}" name="${k}" value="${v}" ${k === 'nin' ? 'dir="ltr" inputmode="numeric" maxlength="18" autocomplete="off"' : k === 'nom_lat' ? 'dir="ltr"' : k === 'nom_ar' ? 'dir="rtl"' : 'dir="auto"'} ${o ? 'aria-required="true"' : ''}>`;
+    return `<div class="${LARGE.includes(k) ? 'full' : ''}"><label for="${id}">${esc(ch[k])}${o ? ' <i>*</i>' : ''}</label>${champ}</div>`; }).join('');
+}
+$('#fFiche').addEventListener('submit', async e => { e.preventDefault(); $('#bFiche').disabled = true;
+  const fiche = Object.fromEntries([...$('#fFiche').querySelectorAll('[name]')].map(x => [x.name, x.value.trim()]));
+  try { document.activeElement.blur(); render((await call('fiche', {fiche})).data); say('#ficheMsg', t('ficheOk'), true); } catch (er) { say('#ficheMsg', er.message); }
+  $('#bFiche').disabled = false; });
+
+/* ---------- connexion ---------- */
+function entrer(j) { S = j.token; store('mchTok', S); render(j.data); $('#login').hidden = true; $('#app').hidden = false; window.scrollTo(0, 0); }
+function sortir() { S = null; V = null; PREM = true; store('mchTok', null); $('#app').hidden = true; $('#login').hidden = false; }
+function onglet(nouv) { $('#tabIn').setAttribute('aria-selected', !nouv); $('#tabNew').setAttribute('aria-selected', nouv); $('#fLogin').hidden = nouv; $('#fNew').hidden = !nouv; $('#oubliMsg').hidden = true; say('#loginMsg', ''); }
+$('#tabIn').onclick = () => onglet(false); $('#tabNew').onclick = () => onglet(true);
+$('#lnkOubli').onclick = () => { const o = $('#oubliMsg'), n = (V && V.contact && V.contact.tel) || DEF.tel; o.textContent = t('oubliTxt').replace('{tel}', telAff(n)); o.hidden = false; };
+$('#voirMdp').onchange = e => { $('#m1').type = e.target.checked ? 'text' : 'password'; };
+$('#fLogin').addEventListener('submit', async e => { e.preventDefault(); $('#bLogin').disabled = true; say('#loginMsg', '');
+  try { entrer(await call('login', {tel: $('#tel').value, mdp: $('#mdp').value})); store('mchTel', $('#tel').value); } catch (er) { say('#loginMsg', er.message); }
+  $('#bLogin').disabled = false; });
+$('#fNew').addEventListener('submit', async e => { e.preventDefault(); say('#loginMsg', '');
+  $('#bNew').disabled = true;
+  try { entrer(await call('inscription', {nom: $('#nom2').value, tel: $('#tel2').value, mdp: $('#m1').value})); store('mchTel', $('#tel2').value); } catch (er) { say('#loginMsg', er.message); }
+  $('#bNew').disabled = false; });
+$('#bOut').onclick = sortir;
+
+/* ---------- actions ---------- */
+const toB64 = f => new Promise((ok, ko) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1]); r.onerror = ko; r.readAsDataURL(f); });
+$('#docs').addEventListener('change', async e => {
+  const inp = e.target; if (!inp.files || !inp.files.length) return; const fs = [...inp.files], doc = inp.dataset.doc; inp.value = '';
+  if (fs.some(f => f.size > 5 * 1024 * 1024)) return say('#docMsg', t('tropGros'));
+  let r;
+  try { for (let i = 0; i < fs.length; i++) { say('#docMsg', t('envoiEnCours') + (fs.length > 1 ? ` (${i + 1}/${fs.length})` : ''), true);
+      r = await call('upload', {doc, name: fs[i].name, mime: fs[i].type, b64: await toB64(fs[i])}); }
+    render(r.data); say('#docMsg', t('recuOk'), true); } catch (er) { if (r) render(r.data); say('#docMsg', er.message); }
+});
+$('#docs').addEventListener('click', async e => {
+  const b = e.target.closest('.del'); if (!b || !confirm(t('confSuppr'))) return; b.disabled = true;
+  try { render((await call('supprimerDoc', {id: b.dataset.id})).data); say('#docMsg', t('supprOk'), true); } catch (er) { b.disabled = false; say('#docMsg', er.message); }
+});
+$('#payCard').addEventListener('change', async e => {
+  if (e.target.id !== 'recu' || !e.target.files[0]) return; const f = e.target.files[0];
+  if (f.size > 5 * 1024 * 1024) return say('#payMsg', t('tropGros'));
+  say('#payMsg', t('envoiEnCours'), true);
+  try { render((await call('recu', {name: f.name, mime: f.type, b64: await toB64(f)})).data); say('#payMsg', t('recuMsg'), true); } catch (er) { say('#payMsg', er.message); }
+});
+$('#fMail').addEventListener('submit', async e => { e.preventDefault(); $('#bMail').disabled = true;
+  try { render((await call('email', {email: $('#mail').value})).data); say('#mailMsg', t('mailOk'), true); } catch (er) { say('#mailMsg', er.message); }
+  $('#bMail').disabled = false; });
+$('#fReq').addEventListener('submit', async e => { e.preventDefault(); $('#bReq').disabled = true;
+  try { render((await call('request', {type: $('#rType').value, message: $('#rMsg').value})).data); $('#rMsg').value = ''; say('#reqMsg', t('reqOk'), true); } catch (er) { say('#reqMsg', er.message); }
+  $('#bReq').disabled = false; });
+
+/* ---------- démarrage ---------- */
+const nav = (navigator.language || '').slice(0, 2);
+setLang(load('mchLang') || new URLSearchParams(location.search).get('lang') || 'ar');   // arabe par défaut, quelle que soit la langue du téléphone
+$('#demoBar').hidden = !DEMO;
+$('#tel').value = load('mchTel') || '';
+if (!load('mchTel')) onglet(true);   // nouveau visiteur : on montre directement « Nouveau compte »
+if (!DEMO && load('mchTok')) { S = load('mchTok'); call('get').then(j => entrer({token: S, data: j.data})).catch(() => sortir()); }
+</script></body></html>

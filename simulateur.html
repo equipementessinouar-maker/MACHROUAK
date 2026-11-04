@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>احسب تمويل مشروعك مع NESDA – مشروعك</title>
+<meta name="description" content="محاكي مجاني: احسب مساهمتك الشخصية، قرض NESDA بدون فوائد وقرض البنك في 30 ثانية.">
+<meta property="og:title" content="احسب تمويل مشروعك مع NESDA في 30 ثانية">
+<meta property="og:description" content="شحال تدفع من جيبك؟ شحال تقرضك NESDA؟ جرّب المحاكي المجاني لمشروعك.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@500;700;800&family=Readex+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F6F7FA;--card:#fff;--ink:#0F1424;--mute:#4A5065;--line:#E3E5EC;--main:#0F1424;--accent:#FF5B22;--ok:#1d8a56;--warn:#c27a0e;--bad:#c0392b;
+ --c1:#FF5B22;--c2:#9AA3C0;--c3:#0F1424;--fd:'Noto Kufi Arabic','Readex Pro',Tahoma,sans-serif;--fb:'Readex Pro',Tahoma,sans-serif}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.7 var(--fb)}
+header{background:#0F1424;color:#fff;padding:18px max(16px,env(safe-area-inset-right)) 84px max(16px,env(safe-area-inset-left));position:relative;overflow:hidden}
+header:before,header:after{content:"";position:absolute;border-radius:50%;background:#FF5B22;opacity:.13}
+header:before{width:260px;height:260px;inset-inline-end:-80px;top:-90px}
+header:after{width:140px;height:140px;inset-inline-start:-40px;bottom:-60px;opacity:.09}
+.wrap{max-width:760px;margin:0 auto;position:relative}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;font:700 27px var(--fd);color:#fff;text-decoration:none}
+.brand b{display:inline-flex;align-items:center;gap:10px;background:none;color:#fff;padding:0;font-weight:700}
+.brand b:before{content:"";flex:none;width:32px;height:32px;border-radius:10px;background:radial-gradient(circle,#FF5B22 0 7px,#fff 7.6px)}
+.langs{display:flex;gap:4px;background:rgba(255,255,255,.12);border-radius:999px;padding:3px}
+.langs button{background:transparent;color:#fff;border:0;border-radius:999px;padding:4px 12px;font:700 14px var(--fb);cursor:pointer}
+.langs button[aria-pressed=true]{background:#FF5B22;color:#0F1424}
+.hero h1{font:900 clamp(28px,6vw,40px)/1.25 var(--fd);margin:26px 0 6px}
+.hero h1 em{font-style:normal;background:#FF5B22;color:#0F1424;padding:0 8px;border-radius:8px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.hero p{margin:0;opacity:.9;font-size:18px}
+main{padding:0 max(16px,env(safe-area-inset-right)) 40px max(16px,env(safe-area-inset-left));margin-top:-58px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;margin-bottom:18px;box-shadow:0 8px 28px rgba(15,20,36,.10)}
+.q{margin:0 0 18px}
+.q>.lbl{display:flex;align-items:center;gap:10px;font:800 17px var(--fd);margin:0 0 8px}
+.q>.lbl i{font-style:normal;flex:none;width:28px;height:28px;border-radius:50%;background:var(--accent);color:#0F1424;font:900 14px/28px var(--fd);text-align:center}
+.seg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.seg button{font:700 15.5px var(--fb);border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:14px;padding:12px 10px;cursor:pointer;text-align:center;line-height:1.35}
+.seg button small{display:block;font-weight:400;font-size:13px;color:var(--mute)}
+.seg button[aria-pressed=true]{border-color:var(--main);background:color-mix(in srgb,var(--main) 10%,var(--card));box-shadow:inset 0 0 0 1.5px var(--main)}
+input{width:100%;font:inherit;padding:12px 14px;border:1.5px solid var(--line);border-radius:14px;background:var(--bg);color:var(--ink)}
+input:focus{outline:3px solid color-mix(in srgb,var(--accent) 40%,transparent);border-color:var(--accent)}
+.money{position:relative}
+.money input{font:900 26px var(--fd);padding-inline-end:56px;direction:ltr;text-align:start}
+html[dir=rtl] .money input{text-align:right}
+.money span{position:absolute;inset-inline-end:16px;top:50%;transform:translateY(-50%);font:800 16px var(--fd);color:var(--mute)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chips button{border:1px solid var(--line);background:var(--card);color:var(--main);border-radius:999px;padding:4px 12px;font:700 13.5px var(--fb);cursor:pointer}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hidden{display:none!important}
+/* résultat */
+.res{border:2px solid var(--accent)}
+.res h2{font:900 20px var(--fd);margin:0 0 4px;color:var(--main)}
+.res .tot{color:var(--mute);font-size:15px;margin-bottom:14px}
+.bar{display:flex;height:22px;border-radius:999px;overflow:hidden;background:var(--line);margin:4px 0 16px}
+.bar div{height:100%;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.num{border-radius:14px;padding:12px;background:var(--bg);border-top:5px solid var(--c)}
+.num .k{font-size:13.5px;color:var(--mute);font-weight:700}
+.num .v{font:900 clamp(18px,4.6vw,26px)/1.25 var(--fd);color:var(--ink);direction:ltr;unicode-bidi:isolate;white-space:nowrap}
+html[dir=rtl] .num .v{text-align:right}
+.num .p{font:800 14px var(--fd);color:var(--mute)}
+.alerts{margin-top:12px}
+.al{padding:10px 14px;border-radius:12px;margin-top:8px;font-weight:700;font-size:15px}
+.al.bad{background:color-mix(in srgb,var(--bad) 13%,transparent);color:var(--bad)}
+.al.ok{background:color-mix(in srgb,var(--ok) 13%,transparent);color:var(--ok)}
+.al.info{background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--ink);font-weight:500}
+.btn{display:block;width:100%;font:800 17px var(--fd);border:0;border-radius:14px;padding:14px 18px;cursor:pointer;text-align:center;text-decoration:none}
+.btn.gold{background:var(--accent);color:#0F1424}
+.btn.wa{background:#1d8a56;color:#fff}
+.btn.ghost{background:transparent;color:var(--main);border:1.5px solid var(--line)}
+.steps{counter-reset:s;list-style:none;padding:0;margin:8px 0 0}
+.steps li{counter-increment:s;position:relative;padding-inline-start:40px;margin:0 0 10px}
+.steps li:before{content:counter(s);position:absolute;inset-inline-start:0;top:0;width:28px;height:28px;border-radius:50%;background:var(--main);color:#fff;font:900 14px/28px var(--fd);text-align:center}
+.lead label{display:block;font-weight:700;margin:10px 0 6px}
+.msg{padding:10px 14px;border-radius:12px;margin-top:10px;font-weight:700}
+.msg.ok{background:color-mix(in srgb,var(--ok) 13%,transparent);color:var(--ok)}
+.msg.err{background:color-mix(in srgb,var(--bad) 13%,transparent);color:var(--bad)}
+.fine{font-size:13px;color:var(--mute);margin-top:14px}
+.subq{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
+.subq label{display:block;font-weight:700;margin:0 0 6px}
+.months{display:flex;gap:6px;margin-top:8px}.months button{flex:1;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:8px;font:700 14.5px var(--fb);cursor:pointer}
+.months button[aria-pressed=true]{border-color:var(--main);box-shadow:inset 0 0 0 1.5px var(--main);background:var(--card)}
+.frais{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+.frais h3{font:800 16px var(--fd);margin:0 0 6px}
+.fr{display:flex;justify-content:space-between;gap:10px;padding:5px 0;font-size:15px}
+.fr span:last-child{font-weight:700;white-space:nowrap}
+.fr.sub{font-size:13.5px;color:var(--mute);padding:1px 0 1px;padding-inline-start:12px}
+.fr.minus span:last-child{color:var(--ok)}
+.poche{margin-top:14px;background:var(--ink);color:#fff;border-radius:18px;padding:16px 18px}
+.poche .k{font-size:14.5px;opacity:.85}
+.poche .v{font:800 clamp(28px,8vw,38px)/1.2 var(--fd);color:#FF5B22;text-align:start;white-space:nowrap}
+html[dir=rtl] .poche .v{text-align:right}
+bdi.n{direction:ltr;unicode-bidi:isolate}
+.poche small{display:block;font-size:13px;opacity:.8;margin-top:4px}
+ol.tl{list-style:none;margin:6px 0 0;padding:0}
+ol.tl li{position:relative;padding:0 0 14px;padding-inline-start:30px}
+ol.tl li:before{content:"";position:absolute;inset-inline-start:6px;top:7px;width:12px;height:12px;border-radius:50%;background:var(--card);border:2.5px solid var(--line)}
+ol.tl li:after{content:"";position:absolute;inset-inline-start:12px;top:22px;bottom:-2px;width:2px;background:var(--line)}
+ol.tl li:last-child:after{display:none}
+ol.tl li.pay:before{border-color:#FF5B22;background:#FF5B22}
+ol.tl .h{display:flex;justify-content:space-between;gap:10px;font-weight:700}
+ol.tl .h span:last-child{white-space:nowrap}
+ol.tl li.zero .h span:last-child{color:var(--mute);font-weight:500}
+ol.tl .est{display:inline-block;margin-inline-end:4px;padding:0 7px;border-radius:999px;background:#FFE9DE;color:#9A3412;font:600 11.5px var(--fb);vertical-align:middle}
+ol.tl small{display:block;color:var(--mute);font-size:13px;line-height:1.5}
+details.det summary{cursor:pointer;color:var(--main);font-weight:700;font-size:14px;margin-top:4px}
+footer{text-align:center;color:var(--mute);font-size:14px;padding:10px 16px 30px}
+footer a{color:var(--main)}
+@media (max-width:520px){.nums{grid-template-columns:1fr}.num{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.row2{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.bar div{transition:none}}
+</style></head><body>
+<header><div class="wrap">
+  <div class="top"><a class="brand" href="./"><b>مشروعك</b></a>
+    <div class="langs" role="group" aria-label="Langue"><button data-l="ar">العربية</button><button data-l="fr">Français</button></div></div>
+  <div class="hero"><h1 data-t="h1"></h1><p data-t="sub"></p></div>
+</div></header>
+
+<main><div class="wrap">
+<section class="card" aria-labelledby="qTitle">
+  <h2 id="qTitle" class="hidden">Questions</h2>
+  <div class="q"><div class="lbl"><i>1</i><span data-t="q1"></span></div>
+    <div class="seg" data-k="type"><button data-v="creation"><span data-t="creation"></span><small data-t="creationS"></small></button><button data-v="extension"><span data-t="extension"></span><small data-t="extensionS"></small></button></div></div>
+
+  <div class="q" id="qStatut"><div class="lbl"><i>2</i><span data-t="q2"></span></div>
+    <div class="seg" data-k="statut"><button data-v="chomeur"><span data-t="chomeur"></span><small data-t="chomeurS"></small></button><button data-v="actif"><span data-t="actif"></span><small data-t="actifS"></small></button></div></div>
+
+  <div class="q" id="qZone"><div class="lbl"><i data-n="zone">3</i><span data-t="q3"></span></div>
+    <div class="seg" data-k="zone"><button data-v="sud" data-t="sud"></button><button data-v="hp" data-t="hp"></button><button data-v="autre" data-t="autre"></button></div></div>
+
+  <div class="q"><div class="lbl"><i data-n="formule">4</i><span data-t="q4"></span></div>
+    <div class="seg" data-k="formule"><button data-v="tri"><span data-t="tri"></span><small data-t="triS"></small></button><button data-v="bi"><span data-t="bi"></span><small data-t="biS"></small></button><button data-v="auto"><span data-t="auto"></span><small data-t="autoS"></small></button></div></div>
+
+  <div class="q"><div class="lbl"><i data-n="age">5</i><span data-t="q5"></span></div>
+    <div class="row2"><input id="age" type="number" inputmode="numeric" min="16" max="80" data-ph="agePh">
+      <div class="seg hidden" data-k="anciennete" id="qAnc"><button data-v="oui" data-t="anc2"></button><button data-v="non" data-t="anc0"></button></div></div></div>
+
+  <div class="q"><div class="lbl"><i data-n="cout">6</i><span data-t="q6"></span></div>
+    <div class="money"><input id="cout" inputmode="numeric" autocomplete="off" placeholder="4.000.000"><span data-t="da"></span></div>
+    <div class="chips" id="chips"></div>
+    <div class="subq"><label for="loyer" data-t="loyerQ"></label>
+      <div class="money"><input id="loyer" inputmode="numeric" autocomplete="off" placeholder="30.000"><span data-t="daMois"></span></div>
+      <div class="months" id="mois"><button type="button" data-v="12" data-t="m12"></button><button type="button" data-v="24" data-t="m24"></button><button type="button" data-v="0" data-t="m0"></button></div></div>
+    <div class="subq"><label for="assur" data-t="assurQ"></label>
+      <div class="money"><input id="assur" inputmode="numeric" autocomplete="off" placeholder="40.000"><span data-t="da"></span></div></div>
+    <label style="display:block;font-weight:700;margin:14px 0 6px" for="activite" data-t="act"></label>
+    <input id="activite" maxlength="80" data-ph="actPh"></div>
+</section>
+
+<section class="card res" id="res" aria-live="polite">
+  <h2 data-t="resT"></h2><div class="tot" id="tot"></div>
+  <div class="bar" id="bar"><div id="b1" style="background:var(--c1)"></div><div id="b2" style="background:var(--c2)"></div><div id="b3" style="background:var(--c3)"></div></div>
+  <div class="nums">
+    <div class="num" style="--c:var(--c1)"><div><div class="k" data-t="apport"></div><div class="p" id="p1"></div></div><div class="v" id="v1">—</div></div>
+    <div class="num" style="--c:var(--c2)"><div><div class="k" data-t="pret"></div><div class="p" id="p2"></div></div><div class="v" id="v2">—</div></div>
+    <div class="num" id="nBank" style="--c:var(--c3)"><div><div class="k" data-t="banque"></div><div class="p" id="p3"></div></div><div class="v" id="v3">—</div></div>
+  </div>
+  <div class="poche" id="poche" hidden><div class="k" data-t="pocheK"></div><div class="v" id="pocheV"></div><small data-t="pocheS"></small></div>
+  <div class="frais" id="frais"></div>
+  <div class="alerts" id="alerts"></div>
+  <p class="fine" data-t="estim"></p>
+  <button class="btn ghost" id="bShare" type="button" data-t="share"></button>
+</section>
+
+<section class="card lead" id="lead">
+  <h2 style="font:900 20px var(--fd);margin:0;color:var(--main)" data-t="leadT"></h2>
+  <p style="margin:4px 0 0;color:var(--mute)" data-t="leadS"></p>
+  <ol class="steps"><li data-t="st1"></li><li data-t="st2"></li><li data-t="st3"></li></ol>
+  <form id="fLead">
+    <div class="row2"><div><label for="nom" data-t="nom"></label><input id="nom" required minlength="3" maxlength="120" autocomplete="name"></div>
+      <div><label for="tel" data-t="tel"></label><input id="tel" required type="tel" dir="ltr" inputmode="tel" autocomplete="tel" placeholder="05XX XX XX XX"></div></div>
+    <label for="wilaya" data-t="wilaya"></label><input id="wilaya" required maxlength="40">
+    <button class="btn wa" style="margin-top:14px" id="bLead" type="submit" data-t="send"></button>
+  </form>
+  <div id="leadMsg"></div>
+  <p class="fine" data-t="indep"></p>
+</section>
+</div></main>
+<footer><a href="./" data-t="espace"></a> · <span dir="ltr">0556 41 73 26</span></footer>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbyCenT8Wx8i7v1i7B5_IuWQaLGV6ByBk69oHLxawYgtTdLawjN2L_9isGoYzWz6EiVb/exec';
+const WA = '213556417326', SITE = 'https://machrouak.pages.dev/simulateur.html', MAX = 10000000;
+/* Grille de financement (estimation, d'après les sources publiées en 2026 — à confirmer auprès de la NESDA) :
+   [apport, prêt NESDA sans intérêt, banque] en % */
+const GRILLE = {chomeur: [5, 25, 70], sud: [10, 20, 70], hp: [12, 18, 70], autre: [15, 15, 70]};
+const T = {
+ar: {h1: 'احسب تمويل مشروعك مع <em>NESDA</em> في 30 ثانية', sub: 'شحال تدفع من جيبك؟ شحال تقرضك NESDA؟ مجاني وبدون تسجيل.',
+  q1: 'واش حاب تدير؟', creation: 'مشروع جديد', creationS: 'إنشاء مؤسسة مصغرة', extension: 'توسيع نشاط', extensionS: 'عندك نشاط من عامين أو أكثر',
+  q2: 'واش هي وضعيتك؟', chomeur: 'بطال أو طالب', chomeurS: 'مسجل في ANEM أو طالب', actif: 'موظف أو مؤمَّن', actifS: 'عندك ضمان اجتماعي (CNAS / CASNOS)',
+  q3: 'وين راح يكون المشروع؟', sud: 'ولايات الجنوب', hp: 'الهضاب العليا والمناطق الخاصة', autre: 'باقي الولايات',
+  q4: 'كيفاش حاب تموّل؟', tri: 'مع البنك (ثلاثي)', triS: 'الأكثر استعمالاً: البنك يموّل 70%', bi: 'بدون بنك (ثنائي)', biS: '50% منك و50% من NESDA', auto: 'تمويل ذاتي', autoS: '100% منك، مع مرافقة NESDA',
+  q5: 'شحال عمرك؟', agePh: 'مثلاً 28', anc2: 'نشاطي عمره عامين أو أكثر', anc0: 'أقل من عامين',
+  q6: 'شحال سعر المعدات والتجهيزات؟ (حسب الفاتورة الشكلية)', loyerQ: 'الكراء الشهري للمحل (إذا كان مكري)', daMois: 'دج/شهر', m12: '12 شهر', m24: '24 شهر', m0: 'محل ملك', assurQ: 'التأمين السنوي (حسب عرض التأمين، اختياري)',
+  fraisT: 'مصاريف الانطلاق الأخرى', fNot: 'الموثق (رهن المعدات)', fAdm: 'مصاريف إدارية', fLoy: n => `الكراء (${n} شهر)`, fLoyN: 'منها قرض الكراء من NESDA', fAss: 'التأمين', fDet: 'التفاصيل',
+  pocheK: 'المجموع اللي تحضّرو من جيبك', pocheS: 'ما تحتاجوش كامل اليوم: يتوزّع على المراحل، والمساهمة تجي بعد موافقة اللجنة والبنك، يعني على الأقل بعد 2 إلى 3 أشهر. مصاريف الموثق والمحضر القضائي والمصاريف الإدارية تقديرية.', tlEst: 'تقديري', tlT: 'وقتاش تدفع؟ المراحل بالترتيب', tlZero: 'بلا مصاريف', tlFin: 'منها قرض الكراء من NESDA', e1: 'موافقة لجنة NESDA', e1s: 'تعرض مشروعك وتاخذ الموافقة', e2: 'موافقة البنك', e2s: 'البنك يدرس الملف', e3: 'كراء المحل وتسجيل العقد', e4: 'السجل التجاري، NIF و NIS', e4s: 'السجل أو بطاقة الحرفي، الطوابع والوثائق', e5: 'فتح الحساب وإيداع مساهمتك', e5s: 'هنا تدفع المساهمة الشخصية', e6: 'الموثق: رهن المعدات', e6s: 'قبل تحرير القرض', e7: 'التأمين', e7s: 'قبل استلام المعدات', projT: (m, c) => `تمويل المعدات: ${m} دج · التكلفة الإجمالية: ${c} دج`, da: 'دج', act: 'النشاط (اختياري)', actPh: 'مثلاً: حلويات، ورشة ألمنيوم، حلاقة…',
+  resT: 'تمويل مشروعك', totF: c => `تكلفة المشروع: ${c} دج`, totE: 'أدخل تكلفة المشروع باش تشوف النتيجة',
+  apport: 'من جيبك', pret: 'قرض NESDA بدون فوائد', banque: 'قرض البنك',
+  okA: 'ملفك يبان مطابق للشروط الأساسية 👍', ageC: 'لإنشاء مشروع، السن المطلوب عادةً بين 18-19 و55 سنة.', ageE: 'للتوسيع، السن المطلوب بين 20 و58 سنة.',
+  ancNo: 'التوسيع يتطلب عامين نشاط على الأقل، مع الوثائق المحاسبية والجبائية.', maxN: 'التكلفة تفوت 10 ملايين دج، وهو الحد الأقصى في NESDA.',
+  ext: 'للتوسيع، النسب تتحدد حسب ملفك: هذي تقدير على أساس وضعية غير بطال.', autoI: 'في التمويل الذاتي ما كاش قرض، لكن تستفيد من مرافقة NESDA (تكوين، استشارة) والامتيازات الجبائية.',
+  estim: 'النسب حسب شروط NESDA لسنة 2026. مصاريف الموثق والمحضر القضائي والمصاريف الإدارية تقديرية فقط، وتختلف من ولاية لأخرى ومن مكتب لآخر. القرار النهائي لـ NESDA وللبنك.',
+  share: 'شارك النتيجة مع صاحبك 📤', shareTxt: (a, n, b) => `حسبت تمويل مشروعي مع NESDA: من جيبي ${a} دج${n ? `، قرض NESDA ${n} دج` : ''}${b ? `، والبنك ${b} دج` : ''}. احسب تاعك في 30 ثانية: ${SITE}`,
+  leadT: 'حاب تبدأ؟ نبعثولك خطتك على واتساب', leadS: 'مجاناً: ملخص تمويلك + قائمة الوثائق + الخطوات اللي تبدا بيها.',
+  st1: 'تبعثلنا اسمك ورقمك وولايتك', st2: 'نتواصلو معاك في واتساب ونشرحولك واش يلزمك بالضبط', st3: 'إذا حبيت، نحضّرولك الدراسة كاملة ونحضّروك للجنة',
+  nom: 'الاسم واللقب', tel: 'رقم الهاتف (واتساب)', wilaya: 'الولاية', send: 'ابعثلي الخطة على واتساب',
+  sent: 'وصلتنا معلوماتك ✅ راح نتواصلو معاك قريباً. واتساب تحل الآن باش تبعثلنا رسالتك.', badTel: 'رقم الهاتف غير صحيح (10 أرقام، مثل 0550123456)', needCout: 'أدخل تكلفة المشروع أولاً',
+  waTxt: (o) => `السلام عليكم، حسبت تمويل مشروعي في المحاكي:\n• النوع: ${o.type}\n• النشاط: ${o.act || '—'}\n• التكلفة: ${o.cout} دج\n• من جيبي: ${o.a} دج${o.n ? ` · NESDA: ${o.n} دج` : ''}${o.b ? ` · البنك: ${o.b} دج` : ''}\n• لازم في جيبي يوم الانطلاق: ${o.p} دج\n• الولاية: ${o.w}\nحاب نعرف الخطوات ونحضّر الدراسة.`,
+  indep: 'مشروعك مكتب دراسات مستقل، لسنا تابعين لـ NESDA. معلوماتك تُستعمل فقط باش نتواصلو معاك.', espace: 'فضاء صاحب المشروع'},
+fr: {h1: 'Calculez le financement <em>NESDA</em> de votre projet en 30 secondes', sub: 'Combien de votre poche ? Combien prête la NESDA ? Gratuit, sans inscription.',
+  q1: 'Que voulez-vous faire ?', creation: 'Nouveau projet', creationS: 'Créer une micro-entreprise', extension: 'Agrandir une activité', extensionS: 'Activité de 2 ans ou plus',
+  q2: 'Votre situation ?', chomeur: 'Chômeur ou étudiant', chomeurS: 'Inscrit à l\'ANEM ou étudiant', actif: 'Salarié ou assuré', actifS: 'Affilié CNAS / CASNOS',
+  q3: 'Où sera le projet ?', sud: 'Wilayas du Sud', hp: 'Hauts-Plateaux et zones spéciales', autre: 'Autres wilayas',
+  q4: 'Comment financer ?', tri: 'Avec la banque (triangulaire)', triS: 'Le plus courant : la banque finance 70 %', bi: 'Sans banque (binaire)', biS: '50 % vous, 50 % NESDA', auto: 'Autofinancement', autoS: '100 % vous, avec l\'accompagnement NESDA',
+  q5: 'Votre âge ?', agePh: 'ex. 28', anc2: 'Activité de 2 ans ou plus', anc0: 'Moins de 2 ans',
+  q6: 'Prix du matériel et des équipements ? (selon la proforma)', loyerQ: 'Loyer mensuel du local (si vous louez)', daMois: 'DA/mois', m12: '12 mois', m24: '24 mois', m0: 'Local à moi', assurQ: 'Assurance annuelle (selon le devis, facultatif)',
+  fraisT: 'Autres frais de démarrage', fNot: 'Notaire (nantissement du matériel)', fAdm: 'Frais administratifs', fLoy: n => `Loyer (${n} mois)`, fLoyN: 'dont prêt loyer NESDA', fAss: 'Assurance', fDet: 'Détail',
+  pocheK: 'Total à prévoir de votre poche', pocheS: 'Pas tout aujourd\'hui : il s\'étale sur les étapes, et l\'apport n\'arrive qu\'après l\'accord de la commission et de la banque, soit au moins 2 à 3 mois. Les frais de notaire, d\'huissier et administratifs sont estimatifs.', tlEst: 'estimation', tlT: 'Quand payer ? Les étapes dans l\'ordre', tlZero: 'Sans frais', tlFin: 'dont prêt loyer NESDA', e1: 'Accord de la commission NESDA', e1s: 'Vous présentez le projet et obtenez l\'accord', e2: 'Accord de la banque', e2s: 'La banque étudie le dossier', e3: 'Location du local et enregistrement du bail', e4: 'Registre de commerce, NIF et NIS', e4s: 'Registre ou carte d\'artisan, timbres et documents', e5: 'Ouverture du compte et dépôt de l\'apport', e5s: 'C\'est ici que vous versez votre apport', e6: 'Notaire : nantissement du matériel', e6s: 'Avant le déblocage du crédit', e7: 'Assurance', e7s: 'Avant la livraison du matériel', projT: (m, c) => `Financement du matériel : ${m} DA · coût total : ${c} DA`, da: 'DA', act: 'Activité (facultatif)', actPh: 'ex. pâtisserie, atelier aluminium, coiffure…',
+  resT: 'Le financement de votre projet', totF: c => `Coût du projet : ${c} DA`, totE: 'Entrez le coût du projet pour voir le résultat',
+  apport: 'De votre poche', pret: 'Prêt NESDA sans intérêt', banque: 'Prêt bancaire',
+  okA: 'Votre profil semble remplir les conditions de base 👍', ageC: 'Pour créer, l\'âge demandé est en général de 18-19 à 55 ans.', ageE: 'Pour une extension, l\'âge demandé est de 20 à 58 ans.',
+  ancNo: 'Une extension demande au moins 2 ans d\'activité, avec les documents comptables et fiscaux.', maxN: 'Le coût dépasse 10 millions DA, plafond de la NESDA.',
+  ext: 'Pour une extension, les taux dépendent du dossier : estimation sur la base d\'un non-chômeur.', autoI: 'En autofinancement, pas de prêt, mais vous gardez l\'accompagnement NESDA (formation, conseil) et les avantages fiscaux.',
+  estim: 'Taux selon les conditions NESDA 2026. Les frais de notaire, d\'huissier et administratifs sont des estimations : ils varient selon la wilaya et le cabinet. La décision finale revient à la NESDA et à la banque.',
+  share: 'Partager mon résultat 📤', shareTxt: (a, n, b) => `J'ai calculé le financement NESDA de mon projet : ${a} DA de ma poche${n ? `, prêt NESDA ${n} DA` : ''}${b ? `, banque ${b} DA` : ''}. Calcule le tien en 30 secondes : ${SITE}`,
+  leadT: 'Prêt à démarrer ? On vous envoie votre plan sur WhatsApp', leadS: 'Gratuit : résumé de votre financement + liste des documents + premières étapes.',
+  st1: 'Vous nous laissez nom, numéro et wilaya', st2: 'On vous contacte sur WhatsApp pour vous dire exactement quoi faire', st3: 'Si vous le souhaitez, on prépare toute l\'étude et votre passage en commission',
+  nom: 'Nom et prénom', tel: 'Téléphone (WhatsApp)', wilaya: 'Wilaya', send: 'Recevoir mon plan sur WhatsApp',
+  sent: 'Bien reçu ✅ On vous contacte très vite. WhatsApp s\'ouvre pour envoyer votre message.', badTel: 'Numéro invalide (10 chiffres, ex. 0550123456)', needCout: 'Entrez d\'abord le coût du projet',
+  waTxt: (o) => `Bonjour, j'ai fait la simulation :\n• Type : ${o.type}\n• Activité : ${o.act || '—'}\n• Coût : ${o.cout} DA\n• Ma part : ${o.a} DA${o.n ? ` · NESDA : ${o.n} DA` : ''}${o.b ? ` · Banque : ${o.b} DA` : ''}\n• À avoir en poche au démarrage : ${o.p} DA\n• Wilaya : ${o.w}\nJe voudrais connaître les étapes et préparer l'étude.`,
+  indep: 'مشروعك est un bureau d\'études indépendant, sans lien avec la NESDA. Vos informations servent uniquement à vous recontacter.', espace: 'Espace porteur de projet'}};
+let L = 'ar';
+/* Frais de démarrage : réglables depuis l'admin (simConfig). Valeurs par défaut prudentes. */
+let CFG = {notaireTaux: 1, notaireMin: 15000, loyerFinance: true, loyerPlafond: 500000, frais: [
+  {ar: 'فتح الحساب البنكي', fr: 'Ouverture du compte bancaire', m: 5000, etape: 'compte'}, {ar: 'السجل التجاري أو بطاقة الحرفي', fr: 'Registre de commerce ou carte d\'artisan', m: 10000},
+  {ar: 'تسجيل عقد الإيجار', fr: 'Enregistrement du bail', m: 10000, etape: 'loc'}, {ar: 'طوابع ووثائق إدارية', fr: 'Timbres et documents', m: 5000}]};
+let MOIS = 12;
+const S = {type: 'creation', statut: 'chomeur', zone: 'autre', formule: 'tri', anciennete: 'oui'};
+const $ = s => document.querySelector(s), t = k => T[L][k];
+const nb = n => `<bdi class="n">${fmt(n)}</bdi>`;   // un nombre isolé ; la devise suit le sens de la phrase
+const fmt = n => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, L === 'fr' ? ' ' : '.');
+const cout = () => Number(($('#cout').value || '').replace(/\D/g, '')) || 0;
+const store = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} };
+const load = k => { try { return localStorage.getItem(k); } catch { return null; } };
+
+function setLang(l) {
+  L = l; const h = document.documentElement; h.lang = l; h.dir = l === 'ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-t]').forEach(e => { const v = T[L][e.dataset.t]; if (typeof v === 'string') e.innerHTML = v; });
+  document.querySelectorAll('[data-ph]').forEach(e => e.placeholder = T[L][e.dataset.ph]);
+  document.querySelectorAll('.langs button').forEach(b => b.setAttribute('aria-pressed', b.dataset.l === L));
+  $('#chips').innerHTML = [1e6, 2e6, 4e6, 6e6, 10e6].map(v => `<button type="button" data-v="${v}">${fmt(v)}</button>`).join('');
+  store('simLang', l); calc();
+}
+function sync() {
+  document.querySelectorAll('.seg[data-k]').forEach(g => g.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', S[g.dataset.k] === b.dataset.v)));
+  const ext = S.type === 'extension', showZone = (ext || S.statut === 'actif') && S.formule === 'tri';
+  $('#qStatut').classList.toggle('hidden', ext); $('#qZone').classList.toggle('hidden', !showZone); $('#qAnc').classList.toggle('hidden', !ext);
+  const n0 = 2 + (ext ? 0 : 1) + (showZone ? 1 : 0);   // renumérote les questions visibles
+  document.querySelector('[data-n=zone]').textContent = ext ? 2 : 3;
+  document.querySelector('[data-n=formule]').textContent = n0;
+  document.querySelector('[data-n=age]').textContent = n0 + 1;
+  document.querySelector('[data-n=cout]').textContent = n0 + 2;
+  calc();
+}
+let R = null;   // dernier résultat
+function calc() {
+  const c = cout(), ext = S.type === 'extension', bi = S.formule !== 'tri';
+  const g = S.formule === 'auto' ? [100, 0, 0] : S.formule === 'bi' ? [50, 50, 0] : GRILLE[(!ext && S.statut === 'chomeur') ? 'chomeur' : S.zone];
+  $('#nBank').style.opacity = bi ? .35 : 1; $('#v2').parentElement.style.opacity = S.formule === 'auto' ? .35 : 1;
+  ['p1', 'p2', 'p3'].forEach((id, i) => $('#' + id).textContent = g[i] ? g[i] + '%' : '—');
+  ['b1', 'b2', 'b3'].forEach((id, i) => $('#' + id).style.width = (c ? g[i] : 0) + '%');
+  const v = g.map(p => c * p / 100);
+  ['v1', 'v2', 'v3'].forEach((id, i) => $('#' + id).textContent = c && g[i] ? fmt(v[i]) : '—');
+  const num = id => Number(($(id).value || '').replace(/\D/g, '')) || 0;
+  const loyTot = num('#loyer') * MOIS, assur = num('#assur');
+  const notaire = c && S.formule !== 'auto' ? Math.max(CFG.notaireMin, c * CFG.notaireTaux / 100) : 0;
+  const adm = c ? CFG.frais.reduce((a, f) => a + (Number(f.m) || 0), 0) : 0;
+  const loyN = S.formule === 'tri' && CFG.loyerFinance ? Math.min(loyTot, CFG.loyerPlafond) : 0;
+  const poche = c ? v[0] + notaire + adm + (loyTot - loyN) + assur : 0, projet = c + loyTot;
+  $('#tot').innerHTML = c ? t('projT')(nb(c), nb(projet)) : t('totE');
+  const fr = e => CFG.frais.filter(f => (f.etape || 'fisc') === e).reduce((a, f) => a + (Number(f.m) || 0), 0);
+  const loyPerso = loyTot - loyN, da = L === 'fr' ? ' DA' : ' دج';
+  const etapes = [['e1', 0, 'e1s'], ['e2', 0, 'e2s'], ['e3', loyPerso + fr('loc'), loyTot ? null : null], ['e4', fr('fisc'), 'e4s'], ['e5', v[0] + fr('compte'), 'e5s'], ['e6', notaire, 'e6s'], ['e7', assur, 'e7s']]
+    .filter(([k, m]) => !(k === 'e7' && !m) && !(k === 'e6' && S.formule === 'auto') && !((k === 'e1' || k === 'e2') && S.formule === 'auto') && !(k === 'e2' && S.formule === 'bi'));
+  const sub = k => k === 'e3' ? (loyTot ? `${t('fLoy')(MOIS)} : ${nb(loyTot)}${da}${loyN ? ` · ${t('tlFin')} : ${nb(loyN)}${da}` : ''}` : t('m0')) : t(k + 's');
+  $('#frais').innerHTML = c ? `<h3>${t('tlT')}</h3><ol class="tl">` + etapes.map(([k, m]) => `<li class="${m ? 'pay' : 'zero'}"><div class="h"><span>${t(k)}</span><span>${m ? nb(m) + da : t('tlZero')}</span></div><small>${m && ['e3', 'e4', 'e5', 'e6'].includes(k) && (k !== 'e3' || fr('loc')) ? `<span class="est">${t('tlEst')}</span> ` : ''}${sub(k)}</small></li>`).join('') + '</ol>' : '';
+  $('#poche').hidden = !c; $('#pocheV').innerHTML = c ? nb(poche) + da : '';
+  const al = [], age = Number($('#age').value) || 0;
+  if (c + loyTot > MAX) al.push(['bad', t('maxN')]);
+  if (age && !ext && (age < 18 || age > 55)) al.push(['bad', t('ageC')]);
+  if (age && ext && (age < 20 || age > 58)) al.push(['bad', t('ageE')]);
+  if (ext && S.anciennete === 'non') al.push(['bad', t('ancNo')]);
+  if (ext && !bi) al.push(['info', t('ext')]);
+  if (S.formule === 'auto') al.push(['info', t('autoI')]);
+  if (c && c + loyTot <= MAX && age && !al.some(a => a[0] === 'bad')) al.unshift(['ok', t('okA')]);
+  $('#alerts').innerHTML = al.map(([k, m]) => `<div class="al ${k}">${m}</div>`).join('');
+  R = c ? {c, a: v[0], n: v[1], b: v[2], poche, loyTot} : null;
+  store('simState', JSON.stringify({S, c: $('#cout').value, age: $('#age').value, act: $('#activite').value, loyer: $('#loyer').value, assur: $('#assur').value, mois: MOIS}));
+  document.querySelectorAll('#mois button').forEach(b => b.setAttribute('aria-pressed', Number(b.dataset.v) === MOIS));
+}
+document.querySelectorAll('.seg[data-k]').forEach(g => g.addEventListener('click', e => { const b = e.target.closest('button[data-v]'); if (b) { S[g.dataset.k] = b.dataset.v; sync(); } }));
+$('#cout').addEventListener('input', e => { const n = e.target.value.replace(/\D/g, '').slice(0, 9); e.target.value = n ? fmt(n) : ''; calc(); });
+$('#chips').addEventListener('click', e => { const b = e.target.closest('button[data-v]'); if (b) { $('#cout').value = fmt(b.dataset.v); calc(); } });
+$('#age').addEventListener('input', calc);
+['#loyer', '#assur'].forEach(id => $(id).addEventListener('input', e => { const n = e.target.value.replace(/\D/g, '').slice(0, 9); e.target.value = n ? fmt(n) : ''; calc(); }));
+$('#mois').addEventListener('click', e => { const b = e.target.closest('button[data-v]'); if (b) { MOIS = Number(b.dataset.v); if (!MOIS) $('#loyer').value = ''; calc(); } }); $('#activite').addEventListener('input', calc);
+document.querySelector('.langs').addEventListener('click', e => { const b = e.target.closest('button[data-l]'); if (b) setLang(b.dataset.l); });
+$('#bShare').onclick = async () => {
+  const txt = R ? t('shareTxt')(fmt(R.a), R.n ? fmt(R.n) : '', R.b ? fmt(R.b) : '') : SITE;
+  if (navigator.share) { try { await navigator.share({text: txt}); return; } catch {} }
+  window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank');
+};
+const telN = s => { let n = String(s || '').replace(/\D/g, ''); if (n.startsWith('00213')) n = '0' + n.slice(5); else if (n.startsWith('213')) n = '0' + n.slice(3); return n; };
+$('#fLead').addEventListener('submit', async e => {
+  e.preventDefault(); const m = $('#leadMsg'); m.innerHTML = '';
+  if (!R) { m.innerHTML = `<div class="msg err">${t('needCout')}</div>`; $('#cout').focus(); return; }
+  const tel = telN($('#tel').value); if (!/^0[5-7]\d{8}$/.test(tel)) { m.innerHTML = `<div class="msg err">${t('badTel')}</div>`; return; }
+  const o = {p: fmt(R.poche), type: S.type === 'extension' ? t('extension') : t('creation'), act: $('#activite').value.trim(), cout: fmt(R.c), a: fmt(R.a), n: R.n ? fmt(R.n) : '', b: R.b ? fmt(R.b) : '', w: $('#wilaya').value.trim()};
+  const w = window.open('', '_blank');   // ouverte tout de suite pour ne pas être bloquée
+  $('#bLead').disabled = true;
+  const src = new URLSearchParams(location.search).get('src') || '';
+  try {
+    await fetch(API, {method: 'POST', headers: {'Content-Type': 'text/plain;charset=utf-8'}, body: JSON.stringify({action: 'lead', lang: L, nom: $('#nom').value.trim(), tel, wilaya: o.w,
+      activite: o.act, type: S.type, statut: S.type === 'extension' ? 'extension' : S.statut, zone: S.zone, formule: S.formule, age: $('#age').value, cout: R.c, apport: Math.round(R.a), nesda: Math.round(R.n), banque: Math.round(R.b), loyer: Math.round(R.loyTot), poche: Math.round(R.poche), source: src})});
+  } catch {}
+  m.innerHTML = `<div class="msg ok">${t('sent')}</div>`;
+  const url = 'https://wa.me/' + WA + '?text=' + encodeURIComponent(t('waTxt')(o));
+  if (w) w.location = url; else location.href = url;
+  $('#bLead').disabled = false;
+});
+/* démarrage */
+try { const st = JSON.parse(load('simState') || 'null'); if (st) { Object.assign(S, st.S || {}); $('#cout').value = st.c || ''; $('#age').value = st.age || ''; $('#activite').value = st.act || ''; $('#loyer').value = st.loyer || ''; $('#assur').value = st.assur || ''; if (st.mois !== undefined) MOIS = st.mois; } } catch {}
+const ql = new URLSearchParams(location.search).get('lang');
+setLang(['ar', 'fr'].includes(ql) ? ql : (load('simLang') || 'ar')); sync();
+fetch(API, {method: 'POST', headers: {'Content-Type': 'text/plain;charset=utf-8'}, body: JSON.stringify({action: 'simConfig'})}).then(r => r.json()).then(j => { if (j.ok && j.cfg) { CFG = Object.assign(CFG, j.cfg); calc(); } }).catch(() => {});
+</script>
+</body></html>

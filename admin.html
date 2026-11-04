@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مشروعك – Gestion des dossiers</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@500;700;800&family=Readex+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F6F7FA;--card:#fff;--ink:#0F1424;--mute:#4A5065;--line:#E3E5EC;--main:#0F1424;--accent:#FF5B22;--ok:#1d8a56;--warn:#c27a0e;--bad:#c0392b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 'Readex Pro',Segoe UI,sans-serif}
+header{background:var(--main);color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+header b{display:inline-flex;align-items:center;gap:10px;font:700 22px 'Noto Kufi Arabic','Readex Pro',sans-serif;color:#fff;background:none;padding:0}
+header b:before{content:"";width:28px;height:28px;border-radius:9px;background:radial-gradient(circle,#FF5B22 0 6px,#fff 6.6px)}
+header a{color:#fff}
+main{max-width:1100px;margin:0 auto;padding:18px 16px 40px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+h2{font:800 20px 'Noto Kufi Arabic','Readex Pro',sans-serif;margin:0 0 12px;color:var(--main)}
+h3{font:800 17px 'Noto Kufi Arabic','Readex Pro',sans-serif;margin:22px 0 8px;color:var(--main)}
+label{display:block;font-weight:700;margin:8px 0 4px;font-size:14px}
+input,select,textarea{width:100%;font:inherit;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:#FBFBFD;color:var(--ink)}
+button{font:700 15px 'Noto Kufi Arabic','Readex Pro',sans-serif;border:0;border-radius:10px;padding:9px 16px;cursor:pointer;background:var(--main);color:#fff}
+button.gold{background:var(--accent);color:#0F1424}button.ghost{background:transparent;color:var(--main);border:1.5px solid var(--line)}
+.row{display:flex;gap:12px;flex-wrap:wrap}.row>*{flex:1 1 180px;min-width:0}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;color:var(--mute);text-transform:uppercase;letter-spacing:.04em}
+tr.click{cursor:pointer}tr.click:hover{background:#F3F4F8}
+.ar{direction:rtl;text-align:right;font-family:'Readex Pro',sans-serif}
+.chip{display:inline-block;padding:2px 10px;border-radius:999px;font-size:13px;font-weight:700;background:#EEF0F5;color:var(--mute);white-space:nowrap}
+.chip.w{background:#FFEADF;color:var(--warn)}.chip.ok{background:#dcf1e6;color:var(--ok)}.chip.g{background:var(--accent);color:#0F1424}.chip.b{background:#f8dedb;color:var(--bad)}
+.msg{padding:10px 12px;border-radius:10px;margin-top:10px;font-weight:700}.msg.err{background:#f8dedb;color:var(--bad)}.msg.ok{background:#dcf1e6;color:var(--ok)}
+.share{white-space:pre-wrap;background:#FFF4EE;border:1px dashed var(--accent);border-radius:10px;padding:12px;margin-top:10px;font-family:'Readex Pro'}
+.alert{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#FFF1EA;border:1.5px solid var(--accent);border-radius:14px;padding:12px 16px;margin-bottom:16px;font-weight:700}
+.alert button{padding:6px 12px;font-size:14px}
+.box{border:2px solid var(--accent);border-radius:14px;padding:14px;margin-top:12px;background:#FFF8F4}
+.box.n{border-color:var(--line);background:#F8F9FB}
+.checks{display:flex;gap:18px;flex-wrap:wrap;margin:10px 0}.checks label{display:flex;gap:6px;align-items:center;margin:0;font-size:15px}.checks input{width:auto}
+.fiche{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:4px 14px}
+.small{color:var(--mute);font-size:14px}
+.scroll{overflow-x:auto}
+[hidden]{display:none!important}
+</style></head><body>
+<header><div><b>مشروعك</b> &nbsp;Gestion des dossiers d'étude</div><div id="who"></div></header>
+<main>
+<section class="card" id="login"><h2>Connexion administrateur</h2>
+  <form id="fL" class="row"><div><label for="pw">Mot de passe</label><input id="pw" type="password" required></div><div style="flex:0 0 auto;align-self:end"><button>Entrer</button></div></form>
+  <div id="lMsg"></div><p id="demoNote" hidden class="small">Mode démonstration (adresse du script vide) : tapez n'importe quel mot de passe.</p></section>
+
+<div id="app" hidden>
+  <section class="card"><h2>Nouveau dossier</h2>
+    <p class="small" style="margin:0 0 6px">Les clients peuvent <b>créer leur compte eux-mêmes</b> sur le site (nom, téléphone, mot de passe). Ici, vous pouvez aussi ouvrir un dossier à l'avance : le client crée ensuite son mot de passe dans « Nouveau compte » avec ce numéro.</p>
+    <form id="fN" class="row">
+      <div><label for="nNom">Nom du porteur</label><input id="nNom" required></div>
+      <div><label for="nTel">Téléphone (WhatsApp)</label><input id="nTel" type="tel" required></div>
+      <div><label for="nDdn">Date de naissance (facultatif)</label><input id="nDdn" type="date"></div>
+      <div><label for="nMail">Email (facultatif)</label><input id="nMail" type="email"></div>
+      <div><label for="nProjet">Projet</label><input id="nProjet" required></div>
+      <div><label for="nWil">Wilaya</label><input id="nWil"></div>
+      <div><label for="nLangC">Langue du client (site, messages)</label><select id="nLangC"><option value="ar">العربية</option><option value="fr">Français</option><option value="en">English</option></select></div>
+      <div><label for="nLang">Langue de l'étude</label><select id="nLang"><option>العربية</option><option>Français</option><option>English</option></select></div>
+      <div style="flex:0 0 auto;align-self:end"><button class="gold">Créer le dossier</button></div>
+    </form><div id="nMsg"></div><div id="nShare" class="share" hidden dir="auto"></div></section>
+
+  <div class="alert" id="aPretes" hidden></div>
+  <section class="card"><h2>Dossiers</h2><div class="scroll"><table><thead><tr><th>Code</th><th>Porteur</th><th>Projet</th><th>Étape</th><th>Accès</th><th>Coordonnées</th><th>Paiement</th><th>Étude</th><th>Demandes</th><th>Mis à jour</th></tr></thead><tbody id="list"></tbody></table></div></section>
+
+  <section class="card"><h2>Réglages du simulateur</h2>
+    <p class="small" style="margin:0 0 8px">Frais de démarrage affichés aux visiteurs du simulateur. Mettez vos vrais montants : ils s'appliquent tout de suite, sans redéployer.</p>
+    <div class="row"><div><label for="sNot">Notaire : % du matériel</label><input id="sNot" type="number" step="0.1" min="0"></div>
+      <div><label for="sNotMin">Notaire : minimum (DA)</label><input id="sNotMin" type="number" min="0"></div>
+      <div><label for="sPlaf">Prêt loyer NESDA : plafond (DA)</label><input id="sPlaf" type="number" min="0"></div>
+      <div style="align-self:end"><label class="small" style="display:flex;gap:8px;align-items:center;margin:0 0 10px"><input type="checkbox" id="sLoyF" style="width:auto"> Loyer financé par la NESDA (formule avec banque)</label></div></div>
+    <label for="sFrais">Petits frais — une ligne : <b>libellé arabe | libellé français | montant DA | étape</b> (étape = <b>loc</b> location, <b>fisc</b> registre/NIF/NIS, <b>compte</b> ouverture du compte)</label>
+    <textarea id="sFrais" rows="5" dir="auto"></textarea>
+    <div style="margin-top:8px"><button id="bSim">Enregistrer les réglages</button></div><div id="sMsg"></div></section>
+
+  <section class="card"><h2>Prospects du simulateur <span id="prCount" class="small"></span></h2>
+    <p class="small" style="margin:0 0 8px">Visiteurs du simulateur qui ont laissé leur numéro. Écrivez-leur sur WhatsApp, puis notez le suivi (ex. « contacté », « devenu client », « pas intéressé »).</p>
+    <div class="scroll"><table><thead><tr><th>Date</th><th>Nom</th><th>Téléphone</th><th>Wilaya</th><th>Projet</th><th>Matériel (DA)</th><th>En poche (DA)</th><th>Formule</th><th>Suivi</th><th></th></tr></thead><tbody id="prospects"></tbody></table></div></section>
+
+  <section class="card" id="det" hidden>
+    <h2 id="dTitle"></h2>
+    <div id="acces" class="small"></div>
+    <div class="row">
+      <div><label for="dNom">Nom</label><input id="dNom"></div><div><label for="dTel">Téléphone (WhatsApp)</label><input id="dTel"></div>
+      <div><label for="dDdn">Date de naissance</label><input id="dDdn" type="date"></div><div><label for="dMail">Email</label><input id="dMail" type="email"></div>
+      <div><label for="dProjet">Projet</label><input id="dProjet"></div>
+      <div><label for="dLangC">Langue du client</label><select id="dLangC"><option value="ar">العربية</option><option value="fr">Français</option><option value="en">English</option></select></div>
+      <div><label for="dEtape">Étape actuelle</label><select id="dEtape"></select></div>
+    </div>
+    <label for="dNote">Message affiché au client (dans sa langue)</label><textarea id="dNote" rows="2" dir="auto"></textarea>
+    <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap"><button id="bSave">Enregistrer</button><button class="ghost" id="bShare">Message d'accès pour le client</button><button class="ghost" id="bAcces">Réinitialiser son mot de passe</button><button class="ghost" id="bAccepte">✅ Dossier accepté par l'accompagnateur</button><button class="ghost" id="bBloque" style="color:var(--bad)">Bloquer ce client</button></div>
+    <details id="jrnBox" style="margin-top:12px"><summary class="small">Journal d'activité du client</summary><div class="scroll"><table><thead><tr><th>Date</th><th>Action</th><th>Détail</th></tr></thead><tbody id="jrn"></tbody></table></div></details>
+    <details id="prepBox" style="margin-top:12px"><summary><b>🎓 Données du quiz du client</b> <span class="small">(chiffres de l'étude + matériel de la facture)</span></summary>
+      <p class="small">Le client voit les questions sur le matériel dès l'envoi de sa proforma, et les questions sur les chiffres après paiement des 5 000 DA. Laissez vide ce que vous ne voulez pas utiliser.</p>
+      <div class="row" id="prepTextes"></div>
+      <div class="row" id="prepChiffres"></div>
+      <div class="row"><div><label for="prepProd">Produits / services vendus — une ligne : <b>Produit | Prix de vente DA | Unité</b></label><textarea id="prepProd" rows="4" dir="auto" placeholder="خبز تقليدي | 20 | للحبة"></textarea></div>
+        <div><label for="prepPostes">Postes d'emploi — une ligne : <b>Poste | Salaire mensuel DA</b></label><textarea id="prepPostes" rows="4" dir="auto" placeholder="خبّاز | 40000"></textarea></div></div>
+      <label for="prepMat">Matériel de la facture — une ligne par article : <b>Désignation | Prix DA | Utilité dans le projet</b> (l'utilité en arabe de préférence)</label>
+      <textarea id="prepMat" rows="8" dir="auto" placeholder="Four à sole 3 étages | 1250000 | يُستعمل في طهي الخبز والحلويات بكميات كبيرة"></textarea>
+      <div style="margin-top:10px"><button id="bPrep">Enregistrer les données du quiz</button></div></details>
+    <div id="share" class="share" hidden dir="auto"></div><div id="dMsg"></div>
+
+    <h3>Coordonnées remplies par le client <span id="fEtat"></span></h3>
+    <form id="fFiche"><div class="fiche" id="fiche"></div><div style="margin-top:10px"><button class="ghost">Enregistrer les coordonnées</button></div></form>
+
+    <h3>Documents reçus (facture proforma et assurance, fournies par le client)</h3>
+    <div class="scroll"><table><thead><tr><th>Document</th><th>Fichier</th><th>Statut</th><th>Remarque pour le client</th><th></th></tr></thead><tbody id="docs"></tbody></table></div>
+
+    <h3>Paiement (5 000 DA)</h3>
+    <div class="row" style="align-items:end">
+      <div><label>Reçu envoyé par le client</label><div id="pRecu">—</div></div>
+      <div><label for="pStat">Statut du paiement</label><select id="pStat"><option value="غير مدفوع">Non payé</option><option value="قيد التحقق">En vérification</option><option value="مؤكد">Confirmé</option></select></div>
+      <div style="flex:0 0 auto"><button id="bPay" class="gold">Enregistrer le paiement</button></div>
+    </div>
+    <div class="box n">
+      <b>Coordonnées de paiement pour ce client</b> <span id="coordState" class="small"></span>
+      <p class="small" style="margin:4px 0 8px">Elles ne sont pas affichées sur le site ni enregistrées dans Google : elles restent sur cet ordinateur et partent par SMS ou WhatsApp, dans la langue du client.</p>
+      <textarea id="coord" rows="3" dir="auto" placeholder="BaridiMob / CCP&#10;RIP : …&#10;Nom : …"></textarea>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px"><button class="ghost" id="bCoordWa">Envoyer par WhatsApp</button><button class="ghost" id="bCoordSms">Envoyer par SMS</button></div>
+    </div>
+
+    <h3>Étude finale et envoi</h3>
+    <div class="row" style="align-items:end">
+      <div><label for="eFile">Étude finale – PDF uniquement (40 Mo max) – téléchargeable par le client seulement après paiement confirmé</label><input type="file" id="eFile" accept=".pdf,application/pdf"></div>
+      <div style="flex:0 0 auto"><button id="bEtude">Déposer l'étude</button></div>
+    </div>
+    <label for="eRes">Résumé de l'étude envoyé au client (coût du projet, crédit, apport, emplois…). En arabe, les nombres s'affichent automatiquement 4.200.000.</label>
+    <textarea id="eRes" rows="4" dir="auto" placeholder="التكلفة الإجمالية 4 200 000 دج · قرض NESDA … · مناصب الشغل 3 · مدة الاسترجاع 4 سنوات"></textarea>
+    <div id="pEtude" style="margin-top:6px"></div>
+    <div class="box" id="envoiBox" hidden>
+      <b>Envoyer au client</b> <span id="envState"></span>
+      <div class="checks"><label><input type="checkbox" id="cWa" checked> WhatsApp</label><label><input type="checkbox" id="cMail" checked> Email <span id="mailInfo" class="small"></span></label></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="gold" id="bEnvoi">Envoyer l'avis + le résumé</button><button class="ghost" id="bPreview">Voir le message</button></div>
+      <p class="small" style="margin:8px 0 0">Le message, dans la langue du client, contient le résumé, le paiement de 5 000 DA, le lien de son espace, le numéro à appeler avec les heures d'appel et la consigne de laisser un message. Une fois payé, il contient le lien du PDF. Tant que le client n'a pas payé, une relance email part automatiquement tous les 3 jours (3 fois max).</p>
+      <div id="preview" class="share" hidden dir="auto"></div>
+    </div>
+
+    <h3>Demandes du client</h3><div id="reqs"></div>
+  </section>
+</div>
+</main>
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbyCenT8Wx8i7v1i7B5_IuWQaLGV6ByBk69oHLxawYgtTdLawjN2L_9isGoYzWz6EiVb/exec';   // même adresse que dans index.html
+const SITE = 'https://machrouak.pages.dev';   // adresse publique de l'espace client
+const TEL = '0556417326';
+const $ = s => document.querySelector(s), DEMO = !API; let PW = '', CUR = null, STEPS = [];
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const say = (el, t, ok) => $(el).innerHTML = t ? `<div class="msg ${ok ? 'ok' : 'err'}">${esc(t)}</div>` : '';
+const STAT = {'مطلوب': 'Requis', 'تم الاستلام': 'Reçu', 'مقبول': 'Accepté', 'يجب إعادة إرسالها': 'À renvoyer'};
+const PAY = {'غير مدفوع': 'Non payé', 'قيد التحقق': 'En vérification', 'مؤكد': 'Confirmé'};
+const TYPES = {modif: 'Modification de l\'étude', equip: 'Changement d\'équipements', perso: 'Changement d\'infos personnelles', question: 'Question'};
+const ETU = {aucune: ['—', ''], prete: ['Prête à l\'envoi', 'g'], envoyee: ['Envoyée', 'ok'], relancer: ['À relancer', 'b'], livree: ['Livrée', 'ok']};
+const etuChip = c => { const [t, k] = ETU[c] || ETU.aucune; return k ? `<span class="chip ${k}">${t}</span>` : '—'; };
+const payChip = p => `<span class="chip ${p === 'مؤكد' ? 'ok' : p === 'قيد التحقق' ? 'w' : ''}">${esc(PAY[p] || 'Non payé')}</span>`;
+const waNum = t => { let n = String(t || '').replace(/\D/g, ''); if (n.startsWith('00')) n = n.slice(2); else if (n.startsWith('0')) n = '213' + n.slice(1); return n; };
+const nombre = (n, l) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, l === 'en' ? ',' : l === 'fr' ? ' ' : '.');
+const telAff = l => { const g = [TEL.slice(0, 4), TEL.slice(4, 6), TEL.slice(6, 8), TEL.slice(8)]; return l === 'ar' ? g.join('.') : g.join(' '); };
+
+/* --- démo --- */
+const FICHE_DEMO = [['nom_ar', 'Nom et prénom (en arabe)', 1], ['nom_lat', 'Nom et prénom (lettres latines)', 1], ['nin', 'NIN (numéro d\'identification nationale, 18 chiffres)', 1], ['lieu_naissance', 'Lieu de naissance', 1], ['adresse', 'Adresse personnelle', 1], ['commune', 'Commune', 1], ['wilaya_res', 'Wilaya', 1], ['situation', 'Situation familiale', 0], ['diplome', 'Niveau d\'études / diplôme', 1], ['experience', 'Expérience professionnelle', 1], ['activite', 'Activité du projet', 1], ['local_adresse', 'Adresse du local', 1], ['local_statut', 'Le local', 1], ['remarques', 'Remarques', 0]];
+const D = {steps: ['Réception du dossier', 'Étude préliminaire d\'inscription', 'Préparation de l\'étude finale', 'Révision avec le porteur de projet', 'Étude prête'],
+  list: [{code: 'M26-001', nom: 'Exemple : Mohamed Benali', projet: 'Menuiserie aluminium', etape: 5, maj: '28/10/2026 16:40', demandes: 1, paiement: 'قيد التحقق', acces: 'oui', fiche: true, etude: 'prete'},
+    {code: 'M26-002', nom: 'Exemple : Amina Saadi', projet: 'Pâtisserie', etape: 2, maj: '24/10/2026 10:05', demandes: 0, paiement: 'غير مدفوع', acces: 'non', fiche: false, etude: 'aucune'}],
+  det: {dossier: {code: 'M26-001', nom: 'Exemple : Mohamed Benali', tel: '0550 00 00 00', ddn: '1990-05-12', email: 'client@exemple.com', lang: 'ar', projet: 'Menuiserie aluminium', etape: 5, note: 'استلمنا الفاتورة الشكلية.', acces: 'oui'},
+    fiche: {complete: true, maj: '28/10/2026 15:00', champs: FICHE_DEMO, valeurs: {nom_ar: 'محمد بن علي', nom_lat: 'BENALI Mohamed', nin: '109900000000000000', lieu_naissance: 'تبسة', adresse: 'حي 500 مسكن، عمارة 12', commune: 'تبسة', wilaya_res: 'تبسة', situation: 'متزوج(ة)', diplome: 'شهادة تكوين مهني في النجارة', experience: '6 سنوات في ورشة نجارة', activite: 'نجارة الألمنيوم والزجاج', local_adresse: 'طريق قسنطينة، تبسة', local_statut: 'إيجار', remarques: ''}},
+    docs: [{key: 'proforma', nom: 'Facture proforma des équipements (fournie par le fournisseur du client)', statut: 'مقبول', fichiers: [{id: 'd1', fichier: 'proforma_A.pdf', statut: 'مقبول', url: '#', date: '27/10/2026'}, {id: 'd3', fichier: 'proforma_B.pdf', statut: 'تم الاستلام', url: '#', date: '28/10/2026'}]}, {key: 'assurance', nom: 'Devis d\'assurance (fourni par l\'assureur du client)', statut: 'تم الاستلام', fichiers: [{id: 'd2', fichier: 'assurance.jpg', statut: 'تم الاستلام', url: '#', date: '27/10/2026'}]}, {key: 'autre', nom: 'Autre document (fiche technique, photo…)', optionnel: true, statut: '', fichiers: []}],
+    paiement: {montant: 5000, statut: 'قيد التحقق', recu: 'recu_baridimob.jpg', recu_url: '#', coord_envoi: ''},
+    etude: {prete: true, nom: 'etude_menuiserie.pdf', url: '#', resume: 'التكلفة الإجمالية 4 200 000 دج · قرض NESDA 70% · مناصب الشغل 3', envoi: {code: 'prete', texte: 'Prête à l\'envoi'}},
+    demandes: [{id: 'a1', date: '27/10/2026 09:30', type: 'question', message: 'متى تكون الدراسة جاهزة؟', statut: 'قيد المعالجة', reponse: ''}]}};
+function demoMsg() { const x = D.det.dossier, e = D.det.etude;
+  return `السلام عليكم ${x.nom}،\n🎉 يسعدنا إعلامكم أن دراسة مشروعكم « ${x.projet} » جاهزة.\n\n📋 ملخص الدراسة :\n${String(e.resume || '').replace(/\d{1,3}(?:[ .]\d{3})+/g, m => nombre(m.replace(/\D/g, ''), 'ar'))}\n\n📥 لاستلام الدراسة (PDF) :\n1. ادفعوا مبلغ 5.000 دج (تصلكم معلومات الدفع عبر SMS أو واتساب)\n2. أرسلوا صورة الوصل عبر فضائكم : ${SITE}/\n\n📞 أو اتصلوا بنا للحصول على الدراسة : 0556.41.73.26\nساعات الاتصال : من السبت إلى الخميس، من 08:30 إلى 17:00. إذا لم نرد فوراً، اتركوا رسالة وسنعيد الاتصال بكم.\nمشروعك – دراسات وملفات NESDA`; }
+const demoInvit = d => `السلام عليكم ${d.nom}،\nتابع دراسة مشروعك « ${d.projet} » واملأ بياناتك وأرسل الفاتورة الشكلية وعرض التأمين عبر فضائك :\n${SITE}/\nأول مرة : اضغط على «حساب جديد»، اكتب اسمك وهذا الرقم واختر كلمة سر.\nمشروعك – دراسات وملفات NESDA · 0556.41.73.26`;
+async function call(action, data = {}) {
+  if (DEMO) { await new Promise(r => setTimeout(r, 200)); const v = D.det;
+    if (action === 'adminList') return {data: D.list, steps: D.steps};
+    if (action === 'adminCreate') return {code: 'M26-00' + (D.list.length + 1), invitation: demoInvit(data)};
+    if (action === 'adminAnswer') { const r = v.demandes.find(x => x.id === data.id); r.reponse = data.reponse; r.statut = 'تمت المعالجة'; }
+    if (action === 'adminDoc') v.docs.forEach(x => x.fichiers.forEach(f => { if (f.id === data.id) { f.statut = data.statut; f.remarque = data.remarque; } }));
+    if (action === 'adminDocSuppr') v.docs.forEach(x => { x.fichiers = x.fichiers.filter(f => f.id !== data.id); });
+    if (action === 'adminPay') v.paiement.statut = data.statut;
+    if (action === 'adminCoord') v.paiement.coord_envoi = '29/10/2026 09:10 (' + (data.canal === 'sms' ? 'SMS' : 'WhatsApp') + ')';
+    if (action === 'adminAcces') v.dossier.acces = 'non';
+    if (action === 'adminPrep') v.prep = data.prep;
+    if (action === 'adminAccepte') v.dossier.accepte = data.accepte ? '30/10/2026 10:30' : '';
+    if (action === 'adminBloquer') v.dossier.bloque = data.bloque ? '30/10/2026 10:00' : '';
+    if (action === 'adminFiche') Object.assign(v.fiche.valeurs, data.fiche);
+    if (action === 'adminEtude') Object.assign(v.etude, {prete: true, nom: data.name, url: '#', resume: data.resume, envoi: {code: 'prete', texte: 'Prête à l\'envoi'}});
+    if (action === 'adminUpdate') { if (data.resume !== undefined) v.etude.resume = data.resume; const {resume, ...r} = data; Object.assign(v.dossier, r); }
+    if (action === 'adminEnvoi') { v.etude.resume = data.resume; v.etude.envoi = {code: 'envoyee', texte: 'Envoyée le 29/10/2026 09:30 (' + data.canaux.join(' + ') + ')'}; D.list[0].etude = 'envoyee'; }
+    v.etude.message = demoMsg(); v.invitation = demoInvit(v.dossier);
+    return {data: Object.assign({steps: D.steps}, JSON.parse(JSON.stringify(v)))}; }
+  const r = await fetch(API, {method: 'POST', headers: {'Content-Type': 'text/plain;charset=utf-8'}, body: JSON.stringify(Object.assign({action, password: PW}, data))});
+  const j = await r.json(); if (!j.ok) throw new Error(j.error); return j;
+}
+
+/* --- liste --- */
+async function loadList() {
+  const j = await call('adminList'); STEPS = j.steps;
+  $('#list').innerHTML = j.data.map(d => `<tr class="click" data-code="${esc(d.code)}"><td><b>${esc(d.code)}</b></td><td>${esc(d.nom)}</td><td>${esc(d.projet)}</td><td>${d.etape}. ${esc(STEPS[d.etape - 1] || '')}</td>
+    <td>${d.bloque ? '<span class="chip b">⛔ Bloqué</span>' : d.acces === 'oui' ? '<span class="chip ok">Créé</span>' : '<span class="chip">Pas encore</span>'}</td><td>${d.fiche ? '<span class="chip ok">Complètes</span>' : '<span class="chip w">Incomplètes</span>'}</td>
+    <td>${payChip(d.paiement)}</td><td>${etuChip(d.etude)}</td><td>${d.demandes ? `<span class="chip w">${d.demandes} en attente</span>` : '—'}</td><td>${esc(d.maj)}</td></tr>`).join('') || '<tr><td colspan="10">Aucun dossier pour l\'instant.</td></tr>';
+  const pr = j.data.filter(d => d.etude === 'prete'), rl = j.data.filter(d => d.etude === 'relancer');
+  $('#aPretes').hidden = !(pr.length || rl.length);
+  $('#aPretes').innerHTML = (pr.length ? `📘 ${pr.length} étude(s) prête(s) à l'envoi : ` + pr.map(d => `<button class="gold" data-code="${esc(d.code)}">${esc(d.code)} – ${esc(d.nom)}</button>`).join(' ') : '')
+    + (rl.length ? ` 🔔 ${rl.length} à relancer (WhatsApp) : ` + rl.map(d => `<button class="ghost" data-code="${esc(d.code)}">${esc(d.code)}</button>`).join(' ') : '');
+}
+$('#fL').addEventListener('submit', async e => { e.preventDefault(); PW = $('#pw').value;
+  try { await loadList(); $('#login').hidden = true; $('#app').hidden = false; loadProspects(); loadSim(); } catch (er) { say('#lMsg', er.message); } });
+/* --- réglages du simulateur --- */
+const SIMD = {notaireTaux: 1, notaireMin: 15000, loyerFinance: true, loyerPlafond: 500000, frais: [{ar: 'فتح الحساب البنكي', fr: 'Ouverture du compte bancaire', m: 5000}]};
+async function loadSim() { let c; try { c = DEMO ? SIMD : (await call('adminGetSimConfig')).cfg; } catch (er) { say('#sMsg', er.message); return; }
+  $('#sNot').value = c.notaireTaux; $('#sNotMin').value = c.notaireMin; $('#sPlaf').value = c.loyerPlafond; $('#sLoyF').checked = !!c.loyerFinance;
+  $('#sFrais').value = (c.frais || []).map(f => [f.ar, f.fr, f.m, f.etape || 'fisc'].join(' | ')).join('\n'); }
+$('#bSim').onclick = async () => {
+  const frais = $('#sFrais').value.split('\n').map(l => l.split('|').map(x => x.trim())).filter(x => x[0] || x[1]).map(([ar, fr, m, e]) => ({ar: ar || fr, fr: fr || ar, m: Number(String(m || '').replace(/[^\d]/g, '')) || 0, etape: ['loc', 'fisc', 'compte'].includes((e || '').toLowerCase()) ? e.toLowerCase() : 'fisc'}));
+  const cfg = {notaireTaux: Number($('#sNot').value) || 0, notaireMin: Number($('#sNotMin').value) || 0, loyerPlafond: Number($('#sPlaf').value) || 0, loyerFinance: $('#sLoyF').checked, frais};
+  try { if (!DEMO) await call('adminSimConfig', {cfg}); say('#sMsg', 'Réglages enregistrés : le simulateur les utilise déjà.', true); } catch (er) { say('#sMsg', er.message); } };
+/* --- prospects du simulateur --- */
+const FORM = {tri: 'Banque 70 %', bi: '50/50', auto: '100 % perso'};
+async function loadProspects() {
+  let d; try { d = DEMO ? [{row: 2, date: '31/10/2026 10:20', nom: 'Exemple : Karim B.', tel: '0550000000', wilaya: 'Sétif', activite: 'Pâtisserie', type: 'creation', cout: 3500000, formule: 'tri', suivi: ''}] : (await call('adminProspects')).data; } catch (er) { $('#prospects').innerHTML = `<tr><td colspan="10">${esc(er.message)}</td></tr>`; return; }
+  $('#prCount').textContent = d.length ? `(${d.length})` : '';
+  $('#prospects').innerHTML = d.map(p => `<tr data-row="${p.row}"><td style="white-space:nowrap">${esc(p.date)}</td><td dir="auto">${esc(p.nom)}</td><td dir="ltr">${esc(p.tel)}</td><td dir="auto">${esc(p.wilaya)}</td>
+    <td dir="auto">${esc(p.activite || '—')}<br><small>${p.type === 'extension' ? 'Extension' : 'Création'}</small></td><td style="white-space:nowrap">${nombre(p.cout || 0, 'fr')}</td><td style="white-space:nowrap">${p.poche ? nombre(p.poche, 'fr') : '—'}</td><td>${esc(FORM[p.formule] || p.formule || '')}</td>
+    <td><input class="sv" dir="auto" value="${esc(p.suivi || '')}" placeholder="contacté, client…"></td>
+    <td style="white-space:nowrap"><a class="chip ok" target="_blank" rel="noopener" href="https://wa.me/${waNum(p.tel)}?text=${encodeURIComponent(`السلام عليكم ${p.nom}، معاك مشروعك. شفنا الحساب اللي درتو في المحاكي لمشروع ${p.activite || ''}. حاب نشرحولك الخطوات؟`)}">WhatsApp</a> <button class="ghost ok2">OK</button></td></tr>`).join('') || '<tr><td colspan="10">Aucun prospect pour l\'instant.</td></tr>';
+}
+$('#prospects').addEventListener('click', async e => { if (!e.target.classList.contains('ok2')) return; const tr = e.target.closest('tr');
+  try { if (!DEMO) await call('adminProspectSuivi', {row: tr.dataset.row, suivi: tr.querySelector('.sv').value}); e.target.textContent = '✓'; setTimeout(() => e.target.textContent = 'OK', 1500); } catch (er) { alert(er.message); } });
+$('#fN').addEventListener('submit', async e => { e.preventDefault();
+  try { const j = await call('adminCreate', {nom: $('#nNom').value, tel: $('#nTel').value, ddn: $('#nDdn').value, email: $('#nMail').value, projet: $('#nProjet').value, wilaya: $('#nWil').value, lang: $('#nLangC').value, langue: $('#nLang').value});
+    say('#nMsg', `Dossier ${j.code} créé. Envoyez ce message au client (copié) :`, true); $('#nShare').textContent = j.invitation; $('#nShare').hidden = false; navigator.clipboard?.writeText(j.invitation).catch(() => {});
+    $('#fN').reset(); await loadList(); } catch (er) { say('#nMsg', er.message); } });
+$('#aPretes').addEventListener('click', e => { const b = e.target.closest('button[data-code]'); if (b) open_(b.dataset.code); });
+$('#list').addEventListener('click', e => { const tr = e.target.closest('tr[data-code]'); if (tr) open_(tr.dataset.code); });
+async function open_(code) { try { const j = await call('adminGet', {code}); $('#coord').value = ''; show(j.data); document.getElementById('det').scrollIntoView({behavior: 'smooth'}); } catch (er) { alert(er.message); } }
+
+/* --- fiche dossier --- */
+function show(v) {
+  CUR = v; const d = v.dossier; $('#det').hidden = false; $('#share').hidden = true; $('#preview').hidden = true;
+  $('#dTitle').textContent = `${d.code} – ${d.nom}`;
+  $('#acces').innerHTML = d.acces === 'oui' ? '🔐 Espace client : mot de passe créé par le client.' : '🔓 Espace client : le client n\'a pas encore créé son mot de passe (« Nouveau compte » sur le site, avec ce numéro).';
+  if (d.bloque) $('#acces').innerHTML = `⛔ <b style="color:var(--bad)">Client bloqué depuis le ${esc(d.bloque)}</b> : il ne peut plus se connecter ni rien envoyer.`;
+  { const qz = v.quiz || {}; $('#acces').innerHTML += '<br>🎓 Préparation à la commission : ' + [1, 2, 3].map(n => `Niveau ${n} : ${qz[n] != null ? '<b>' + qz[n] + '%</b>' : '—'}`).join(' · '); }
+  { const p = v.prep || {}, C = p.chiffres || {};
+    $('#prepChiffres').innerHTML = PREP_CH.map(([k, l]) => `<div style="min-width:200px"><label for="pc_${k}">${l}</label><input id="pc_${k}" data-k="${k}" dir="auto" value="${esc(C[k] ?? '')}"></div>`).join('');
+    $('#prepMat').value = (p.materiel || []).map(m => [m.nom, m.prix, m.role].join(' | ')).join('\n');
+    const T = p.texte || {}; $('#prepTextes').innerHTML = PREP_TX.map(([k, l]) => `<div style="min-width:240px"><label for="pt_${k}">${l}</label><input id="pt_${k}" data-k="${k}" dir="auto" value="${esc(T[k] ?? '')}"></div>`).join('');
+    $('#prepProd').value = (p.produits || []).map(x => [x.nom, x.prix, x.unite].join(' | ')).join('\n');
+    $('#prepPostes').value = (p.postes || []).map(x => [x.poste, x.salaire].join(' | ')).join('\n'); }
+  $('#acces').innerHTML += d.accepte ? `<br>✅ Dossier accepté par l'accompagnateur le ${esc(d.accepte)} : niveau 3 du quiz ouvert.` : '<br>⏳ Dossier pas encore accepté par l\'accompagnateur : niveau 3 du quiz fermé.';
+  $('#bAccepte').textContent = d.accepte ? '↩ Annuler « dossier accepté »' : '✅ Dossier accepté par l\'accompagnateur';
+  $('#bBloque').textContent = d.bloque ? 'Débloquer ce client' : 'Bloquer ce client';
+  $('#jrn').innerHTML = (v.journal || []).map(x => `<tr><td style="white-space:nowrap">${esc(x.date)}</td><td>${esc(x.action)}</td><td dir="auto">${esc(x.detail)}</td></tr>`).join('') || '<tr><td colspan="3">Aucune activité enregistrée.</td></tr>';
+  $('#dNom').value = d.nom; $('#dTel').value = d.tel || ''; $('#dDdn').value = d.ddn || ''; $('#dMail').value = d.email || ''; $('#dProjet').value = d.projet; $('#dNote').value = d.note || ''; $('#dLangC').value = d.lang || 'ar';
+  $('#dEtape').innerHTML = (v.steps || STEPS).map((s, i) => `<option value="${i + 1}" ${i + 1 == d.etape ? 'selected' : ''}>${i + 1}. ${esc(s)}</option>`).join('');
+  const fi = v.fiche || {valeurs: {}, champs: []};
+  $('#fEtat').innerHTML = fi.complete ? '<span class="chip ok">Complètes</span>' : '<span class="chip w">Incomplètes</span>';
+  $('#fiche').innerHTML = (fi.champs || []).map(([k, lib, o]) => `<div><label for="fi_${k}">${esc(lib)}${o ? ' *' : ''}</label><input id="fi_${k}" name="${k}" dir="auto" value="${esc(fi.valeurs[k] || '')}"></div>`).join('');
+  $('#docs').innerHTML = v.docs.map(x => { const fs = x.fichiers || [];
+    if (!fs.length) return `<tr><td>${esc(x.nom)}</td><td>—</td><td><span class="chip ${x.optionnel ? '' : 'w'}">${x.optionnel ? 'Facultatif' : 'Requis'}</span></td><td></td><td></td></tr>`;
+    return fs.map((f, i) => `<tr data-id="${esc(f.id)}"><td>${i ? '' : esc(x.nom) + (fs.length > 1 ? ` <span class="chip g">${fs.length} fichiers</span>` : '')}</td><td>${f.url ? `<a href="${esc(f.url)}" target="_blank" rel="noopener">${esc(f.fichier)}</a>` : esc(f.fichier)}<br><small>${esc(f.date)}</small></td>
+    <td><select class="st">${Object.entries(STAT).filter(([k]) => k !== 'مطلوب').map(([k, l]) => `<option value="${k}" ${k === f.statut ? 'selected' : ''}>${l}</option>`).join('')}</select></td><td><input class="rm" dir="auto" value="${esc(f.remarque || '')}"></td><td style="white-space:nowrap"><button class="ghost sv">OK</button> <button class="ghost dl" title="Supprimer ce fichier">✕</button></td></tr>`).join(''); }).join('');
+  const pa = v.paiement || {}, et = v.etude || {};
+  $('#pRecu').innerHTML = pa.recu_url ? `<a href="${esc(pa.recu_url)}" target="_blank" rel="noopener">${esc(pa.recu)}</a>` : (pa.recu ? esc(pa.recu) : '— pas encore envoyé');
+  $('#pStat').value = pa.statut || 'غير مدفوع';
+  $('#coordState').textContent = pa.coord_envoi ? '· envoyées le ' + pa.coord_envoi : '· pas encore envoyées';
+  if (!$('#coord').value) { try { $('#coord').value = localStorage.getItem('mchCoord') || ''; } catch {} }
+  $('#eRes').value = et.resume || '';
+  $('#pEtude').innerHTML = et.url ? `Étude déposée : <a href="${esc(et.url)}" target="_blank" rel="noopener">${esc(et.nom)}</a> ${pa.statut === 'مؤكد' ? '<span class="chip ok">téléchargeable par le client</span>' : '<span class="chip w">bloquée jusqu\'au paiement</span>'}` : 'Aucune étude déposée.';
+  $('#envoiBox').hidden = !et.url;
+  if (et.url) { const s = et.envoi || {}; $('#envState').innerHTML = etuChip(s.code) + ' <span class="small">' + esc(s.texte || '') + '</span>';
+    $('#mailInfo').textContent = d.email ? '(' + d.email + ')' : '(aucun email)'; $('#cMail').checked = !!d.email; $('#cMail').disabled = !d.email; $('#cWa').checked = !!d.tel; $('#cWa').disabled = !d.tel; }
+  $('#reqs').innerHTML = v.demandes.map(r => `<div class="card" style="margin:8px 0" data-id="${esc(r.id)}"><div><span class="chip ${r.statut === 'تمت المعالجة' ? 'ok' : 'w'}">${r.statut === 'تمت المعالجة' ? 'Traitée' : 'En cours'}</span> ${esc(r.date)} · ${esc(TYPES[r.type] || r.type)}</div>
+    <p dir="auto" style="margin:8px 0">${esc(r.message)}</p><textarea class="ans" dir="auto" rows="2" placeholder="Réponse au client (dans sa langue)">${esc(r.reponse || '')}</textarea><div style="margin-top:6px"><button class="an">Répondre et clore</button></div></div>`).join('') || '<p>Aucune demande.</p>';
+}
+const ok = (j, m) => { show(j.data); loadList(); say('#dMsg', m, true); };
+$('#bSave').onclick = async () => { try { ok(await call('adminUpdate', {code: CUR.dossier.code, nom: $('#dNom').value, tel: $('#dTel').value, ddn: $('#dDdn').value, email: $('#dMail').value, lang: $('#dLangC').value, resume: $('#eRes').value, projet: $('#dProjet').value, etape: +$('#dEtape').value, note: $('#dNote').value}), 'Enregistré.'); } catch (er) { say('#dMsg', er.message); } };
+$('#bShare').onclick = () => { const t = CUR.invitation || ''; $('#share').textContent = t; $('#share').hidden = false; navigator.clipboard?.writeText(t).then(() => say('#dMsg', 'Message copié : collez-le dans WhatsApp ou SMS.', true)).catch(() => {}); };
+const PREP_CH = [['cout', 'Coût total du projet (DA)'], ['apport', 'Apport personnel (DA)'], ['pret_nesda', 'Prêt NESDA sans intérêt (DA)'], ['pret_banque', 'Prêt bancaire (DA)'], ['ca', 'Chiffre d\'affaires année 1 (DA)'], ['benefice', 'Résultat net année 1 (DA)'], ['emplois', 'Postes d\'emploi'], ['seuil', 'Seuil de rentabilité (DA)'], ['loyer', 'Loyer mensuel du local (DA)'], ['prime', 'Prime d\'assurance annuelle (DA)'], ['retour', 'Délai de récupération (texte, ex. 3 سنوات و9 أشهر)']];
+const PREP_TX = [['activite', 'Activité exacte du projet (en arabe)'], ['lieu', 'Lieu du projet (commune, wilaya)'], ['clients', 'Clients ciblés (en arabe)'], ['fournisseur', 'Fournisseur de la proforma'], ['assureur', 'Assureur (compagnie, agence)'], ['local', 'Le local (ملك / إيجار…)']];
+const lignes = id => $(id).value.split('\n').map(l => l.split('|').map(x => x.trim())).filter(x => x[0]);
+$('#bPrep').onclick = async () => {
+  const texte = {}; document.querySelectorAll('#prepTextes input').forEach(i => { if (i.value.trim()) texte[i.dataset.k] = i.value.trim(); });
+  const produits = lignes('#prepProd').map(([nom, prix, unite]) => ({nom, prix: prix || '', unite: unite || ''})), postes = lignes('#prepPostes').map(([poste, salaire]) => ({poste, salaire: salaire || ''}));
+  const chiffres = {}; document.querySelectorAll('#prepChiffres input').forEach(i => { if (i.value.trim()) chiffres[i.dataset.k] = i.value.trim(); });
+  const materiel = $('#prepMat').value.split('\n').map(l => l.split('|').map(x => x.trim())).filter(x => x[0]).map(([nom, prix, role]) => ({nom, prix: prix || '', role: role || ''}));
+  try { ok(await call('adminPrep', {code: CUR.dossier.code, prep: {chiffres, materiel, texte, produits, postes}}), 'Données du quiz enregistrées (' + materiel.length + ' article(s)).'); } catch (er) { say('#dMsg', er.message); } };
+$('#bAccepte').onclick = async () => { const a = !CUR.dossier.accepte;
+  if (!confirm(a ? 'Confirmer : le dossier (étude modifiée) a été saisi et accepté par l\'accompagnateur ? Le niveau 3 du quiz s\'ouvre pour le client.' : 'Annuler « dossier accepté » ?')) return;
+  try { ok(await call('adminAccepte', {code: CUR.dossier.code, accepte: a}), a ? 'Dossier marqué accepté : niveau 3 ouvert.' : 'Annulé.'); } catch (er) { say('#dMsg', er.message); } };
+$('#bBloque').onclick = async () => { const b = !CUR.dossier.bloque;
+  if (!confirm(b ? 'Bloquer ce client ? Il ne pourra plus se connecter ni envoyer de fichiers.' : 'Débloquer ce client ?')) return;
+  try { ok(await call('adminBloquer', {code: CUR.dossier.code, bloque: b}), b ? 'Client bloqué.' : 'Client débloqué.'); loadList(); } catch (er) { say('#dMsg', er.message); } };
+$('#bAcces').onclick = async () => { if (!confirm('Le client devra recréer son mot de passe dans « Nouveau compte » avec son numéro. Continuer ?')) return;
+  try { ok(await call('adminAcces', {code: CUR.dossier.code}), 'Mot de passe effacé : le client le recrée via « Nouveau compte » avec son numéro.'); } catch (er) { say('#dMsg', er.message); } };
+$('#fFiche').addEventListener('submit', async e => { e.preventDefault(); const fiche = Object.fromEntries([...$('#fiche').querySelectorAll('[name]')].map(x => [x.name, x.value.trim()]));
+  try { ok(await call('adminFiche', {code: CUR.dossier.code, fiche}), 'Coordonnées enregistrées.'); } catch (er) { say('#dMsg', er.message); } });
+$('#docs').addEventListener('click', async e => { const tr = e.target.closest('tr'); if (!tr || !tr.dataset.id) return;
+  if (e.target.classList.contains('sv')) try { ok(await call('adminDoc', {code: CUR.dossier.code, id: tr.dataset.id, statut: tr.querySelector('.st').value, remarque: tr.querySelector('.rm').value}), 'Document mis à jour.'); } catch (er) { say('#dMsg', er.message); }
+  if (e.target.classList.contains('dl') && confirm('Supprimer définitivement ce fichier (il part aussi à la corbeille du Drive) ?')) try { ok(await call('adminDocSuppr', {code: CUR.dossier.code, id: tr.dataset.id}), 'Fichier supprimé.'); } catch (er) { say('#dMsg', er.message); } });
+$('#reqs').addEventListener('click', async e => { if (!e.target.classList.contains('an')) return; const c = e.target.closest('[data-id]');
+  try { ok(await call('adminAnswer', {id: c.dataset.id, reponse: c.querySelector('.ans').value}), 'Réponse envoyée.'); } catch (er) { alert(er.message); } });
+$('#bPay').onclick = async () => { try { ok(await call('adminPay', {code: CUR.dossier.code, statut: $('#pStat').value}), 'Paiement enregistré.'); } catch (er) { say('#dMsg', er.message); } };
+
+/* --- coordonnées de paiement (SMS / WhatsApp, langue du client) --- */
+function coordMsg() { const d = CUR.dossier, l = d.lang || 'ar', c = $('#coord').value.trim(), p = nombre(5000, l);
+  if (l === 'fr') return `Bonjour ${d.nom},\nCoordonnées pour payer l'étude de votre projet (${p} DA) :\n${c}\n\nAprès le paiement, envoyez la photo du reçu sur votre espace : ${SITE}/\nمشروعك – ${telAff('fr')}`;
+  if (l === 'en') return `Hello ${d.nom},\nPayment details for your project study (${p} DA):\n${c}\n\nAfter paying, send a photo of the receipt on your space: ${SITE}/\nمشروعك – ${telAff('en')}`;
+  return `السلام عليكم ${d.nom}،\nمعلومات دفع مبلغ دراسة مشروعكم (${p} دج) :\n${c}\n\nبعد الدفع أرسلوا صورة الوصل عبر فضائكم : ${SITE}/\nمشروعك – ${telAff('ar')}`; }
+async function sendCoord(canal) {
+  if (!$('#coord').value.trim()) return say('#dMsg', 'Écrivez d\'abord les coordonnées de paiement.');
+  if (!CUR.dossier.tel) return say('#dMsg', 'Ajoutez le téléphone du client.');
+  try { localStorage.setItem('mchCoord', $('#coord').value); } catch {}
+  const t = encodeURIComponent(coordMsg()), n = waNum(CUR.dossier.tel);
+  if (canal === 'sms') location.href = 'sms:+' + n + '?body=' + t; else window.open('https://wa.me/' + n + '?text=' + t, '_blank');
+  try { ok(await call('adminCoord', {code: CUR.dossier.code, canal}), canal === 'sms' ? 'SMS préparé : appuyez sur Envoyer.' : 'WhatsApp ouvert : appuyez sur Envoyer.'); } catch (er) { say('#dMsg', er.message); } }
+$('#bCoordWa').onclick = () => sendCoord('whatsapp'); $('#bCoordSms').onclick = () => sendCoord('sms');
+
+/* --- étude (PDF) et envoi --- */
+const toB64 = f => new Promise((ok, ko) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1]); r.onerror = ko; r.readAsDataURL(f); });
+$('#eFile').addEventListener('change', e => { const f = e.target.files[0]; if (f && !/\.pdf$/i.test(f.name)) { e.target.value = ''; say('#dMsg', 'L\'étude doit être un fichier PDF.'); } });
+$('#bEtude').onclick = async () => { const f = $('#eFile').files[0]; if (!f) return say('#dMsg', 'Choisissez d\'abord le PDF de l\'étude.');
+  if (!/\.pdf$/i.test(f.name)) return say('#dMsg', 'L\'étude doit être un fichier PDF.');
+  if (f.size > 40 * 1024 * 1024) return say('#dMsg', 'Fichier trop lourd (40 Mo max).'); say('#dMsg', 'Envoi en cours…', true);
+  try { ok(await call('adminEtude', {code: CUR.dossier.code, name: f.name, mime: 'application/pdf', resume: $('#eRes').value, b64: await toB64(f)}), 'Étude déposée : elle est prête à l\'envoi.'); } catch (er) { say('#dMsg', er.message); } };
+$('#bPreview').onclick = async () => { try { const j = await call('adminUpdate', {code: CUR.dossier.code, resume: $('#eRes').value, email: $('#dMail').value, tel: $('#dTel').value}); show(j.data);
+  $('#preview').textContent = j.data.etude.message || ''; $('#preview').hidden = false; } catch (er) { say('#dMsg', er.message); } };
+$('#bEnvoi').onclick = async () => {
+  const canaux = [$('#cWa').checked && 'whatsapp', $('#cMail').checked && 'email'].filter(Boolean);
+  if (!canaux.length) return say('#dMsg', 'Cochez WhatsApp et/ou Email.');
+  const w = canaux.includes('whatsapp') ? window.open('', '_blank') : null;   // ouvert tout de suite pour ne pas être bloqué
+  say('#dMsg', 'Envoi en cours…', true);
+  try { const j = await call('adminEnvoi', {code: CUR.dossier.code, canaux, resume: $('#eRes').value});
+    if (w) w.location = 'https://wa.me/' + waNum(j.data.dossier.tel) + '?text=' + encodeURIComponent(j.data.etude.message || '');
+    ok(j, canaux.includes('email') ? (w ? 'Email envoyé. WhatsApp ouvert : appuyez sur Envoyer.' : 'Email envoyé au client.') : 'WhatsApp ouvert : appuyez sur Envoyer.');
+  } catch (er) { if (w) w.close(); say('#dMsg', er.message); } };
+$('#demoNote').hidden = !DEMO;
+</script></body></html>
